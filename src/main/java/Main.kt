@@ -214,12 +214,13 @@ object Main {
 //            print("$it ")
 //        }
 
-//        spiralOrder(arrayOf(
-//                intArrayOf(1,2,3),
-//                intArrayOf(4,5,6),
-//                intArrayOf(7,8,9))).forEach {
-//                    print("$it ")
-//        }
+        spiralOrder(arrayOf(
+                intArrayOf(1,2,3,4),
+                intArrayOf(5,6,7,8),
+                intArrayOf(9,10,11,12),
+                intArrayOf(13,14,15,16))).forEach {
+                    print("$it ")
+        }
 
 //        merge(arrayOf(intArrayOf(1,4),
 //                      intArrayOf(0,0))).forEach {
@@ -382,20 +383,20 @@ object Main {
 //            println()
 //        }
 
-        solveSudoku(arrayOf(charArrayOf('5','3','.','.','7','.','.','.','.'),
-                charArrayOf('6','.','.','1','9','5','.','.','.'),
-                charArrayOf('.','9','8','.','.','.','.','6','.'),
-                charArrayOf('8','.','.','.','6','.','.','.','3'),
-                charArrayOf('4','.','.','8','.','3','.','.','1'),
-                charArrayOf('7','.','.','.','2','.','.','.','6'),
-                charArrayOf('.','6','.','.','.','.','2','8','.'),
-                charArrayOf('.','.','.','4','1','9','.','.','5'),
-                charArrayOf('.','.','.','.','8','.','.','7','9'))).forEach {
-            it.forEach { c ->
-                print("$c ")
-            }
-            println()
-        }
+//        solveSudoku(arrayOf(charArrayOf('5','3','.','.','7','.','.','.','.'),
+//                charArrayOf('6','.','.','1','9','5','.','.','.'),
+//                charArrayOf('.','9','8','.','.','.','.','6','.'),
+//                charArrayOf('8','.','.','.','6','.','.','.','3'),
+//                charArrayOf('4','.','.','8','.','3','.','.','1'),
+//                charArrayOf('7','.','.','.','2','.','.','.','6'),
+//                charArrayOf('.','6','.','.','.','.','2','8','.'),
+//                charArrayOf('.','.','.','4','1','9','.','.','5'),
+//                charArrayOf('.','.','.','.','8','.','.','7','9'))).forEach {
+//            it.forEach { c ->
+//                print("$c ")
+//            }
+//            println()
+//        }
     }
 
 
@@ -2137,23 +2138,25 @@ object Main {
      */
     fun spiralOrder(matrix: Array<IntArray>): List<Int> {
         val result = arrayListOf<Int>()
-//        var i = 0
-//        var j = 0
-//        val maxLength = matrix.size*matrix[0].size
-//        while (result.size < maxLength){
-//            while (i == 0 && j < matrix[0].size) {
-//                result.add(matrix[i][j++])
-//            }
-//            j -=1
-//            while (j == matrix[0].size-1 && i < matrix.size){
-//                result.add(matrix[++i][j])
-//            }
-//            i -= 1
-//            while (i == matrix.size - 1 && j >= 0){
-//                result.add(matrix[i][--j])
-//            }
-//        }
+        val isVisited = Array(matrix.size){ BooleanArray(matrix[0].size){false} }
+        spiralOrderProcess(0,0,1,matrix,isVisited,result)
         return result
+    }
+
+
+    private fun spiralOrderProcess(r: Int,c: Int,dir: Int,matrix: Array<IntArray>,isVisited: Array<BooleanArray>,result: ArrayList<Int>): Boolean{
+        if (r < 0 || c < 0) return false
+        if (r > matrix.size-1 || c > matrix[0].size-1) return false
+        if (isVisited[r][c]) return false
+        result.add(matrix[r][c])
+        isVisited[r][c] = true
+        return when(dir){
+            1 -> spiralOrderProcess(r, c+1, dir, matrix, isVisited, result) || spiralOrderProcess(r+1, c, 2, matrix, isVisited, result)
+            2 -> spiralOrderProcess(r+1, c, dir, matrix, isVisited, result) || spiralOrderProcess(r, c-1, 3, matrix, isVisited, result)
+            3 -> spiralOrderProcess(r, c-1, dir, matrix, isVisited, result) || spiralOrderProcess(r-1, c, 4, matrix, isVisited, result)
+            4 -> spiralOrderProcess(r-1, c, dir, matrix, isVisited, result) || spiralOrderProcess(r, c+1, 1, matrix, isVisited, result)
+            else -> true
+        }
     }
 
     /**
