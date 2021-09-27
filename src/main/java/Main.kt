@@ -214,13 +214,13 @@ object Main {
 //            print("$it ")
 //        }
 
-        spiralOrder(arrayOf(
-                intArrayOf(1,2,3,4),
-                intArrayOf(5,6,7,8),
-                intArrayOf(9,10,11,12),
-                intArrayOf(13,14,15,16))).forEach {
-                    print("$it ")
-        }
+//        spiralOrder(arrayOf(
+//                intArrayOf(1,2,3,4),
+//                intArrayOf(5,6,7,8),
+//                intArrayOf(9,10,11,12),
+//                intArrayOf(13,14,15,16))).forEach {
+//                    print("$it ")
+//        }
 
 //        merge(arrayOf(intArrayOf(1,4),
 //                      intArrayOf(0,0))).forEach {
@@ -368,6 +368,9 @@ object Main {
 //        }
 
 //        println(canJump(intArrayOf()))
+
+//        println(jump(intArrayOf(5,6,4,4,6,9,4,4,7,4,4,8,2,6,8,1,5,9,6,5,2,7,9,7,9,6,9,4,1,6,8,8,4,4,2,0,3,8,5)))
+        println(jump(intArrayOf(2,3,1,1,4)))
 
 //        println(exist(arrayOf(charArrayOf('a','a','b','a','a','b'),
 //                              charArrayOf('a','a','b','b','b','a'),
@@ -3260,18 +3263,24 @@ object Main {
 
     /**
      * 45. 跳跃游戏 II
-     * 2,3,1,1,4
+     * 5,6,4,4,6,9,4,4,7,4,4,8,2,6,8,1,5,9,6,5,2,7,9,7,9,6,9,4,1,6,8,8,4,4,2,0,3,8,5
      */
     fun jump(nums: IntArray): Int {
-        var minStep = 0
+        var step = 0
+        var arrived = 0
+        var nextArrived = 0
         for (i in nums.indices){
-
+            //下一步能达到的最远距离
+            nextArrived = nextArrived.coerceAtLeast(i+nums[i])
+            //当下一步能达到最后一步或者超过最后一个位置时，直接返回。因为没到一个位置都是取得当前位置能到达的最远距离。
+            if (nextArrived >= nums.size-1) return step+1
+            //当前位置遍历到上一次达到的最远距离时更新下一次要到达的位置，步数增加
+            if (arrived == i){
+                step++
+                arrived = nextArrived
+            }
         }
-        return minStep
-    }
-
-    private fun jumpProgress(nums: IntArray,index: Int){
-
+        return step
     }
 
     /**
