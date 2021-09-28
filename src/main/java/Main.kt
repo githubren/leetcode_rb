@@ -317,19 +317,13 @@ object Main {
 
 //        println(lengthOfLongestSubstring2("ckilbkd"))
 
-        val node1 = ListNode(9)
-        val node2 = ListNode(9)
-        val node3 = ListNode(9)
-        val node4 = ListNode(9)
-        val node5 = ListNode(9)
-        val node6 = ListNode(9)
-        val node7 = ListNode(9)
+        val node1 = ListNode(1)
+        val node2 = ListNode(2)
+        val node3 = ListNode(3)
+        val node4 = ListNode(4)
         node1.next = node2
         node2.next = node3
-        node3.next = node4
-        node4.next = node5
-        node5.next = node6
-        node6.next = node7
+//        node3.next = node4
 
         val nodea = ListNode(9)
         val nodeb = ListNode(9)
@@ -370,7 +364,7 @@ object Main {
 //        println(canJump(intArrayOf()))
 
 //        println(jump(intArrayOf(5,6,4,4,6,9,4,4,7,4,4,8,2,6,8,1,5,9,6,5,2,7,9,7,9,6,9,4,1,6,8,8,4,4,2,0,3,8,5)))
-        println(jump(intArrayOf(2,3,1,1,4)))
+//        println(jump(intArrayOf(2,3,1,1,4)))
 
 //        println(exist(arrayOf(charArrayOf('a','a','b','a','a','b'),
 //                              charArrayOf('a','a','b','b','b','a'),
@@ -400,6 +394,11 @@ object Main {
 //            }
 //            println()
 //        }
+        var result = swapPairs(node1)
+        while (result != null){
+            print("${result.n} ")
+            result = result.next
+        }
     }
 
 
@@ -3410,6 +3409,29 @@ object Main {
             subList.add(curNum)
             backTraceCombine(n, k, curNum+1, subList, result)
             subList.removeAt(subList.size-1)
+        }
+    }
+
+    /**
+     * 24. 两两交换链表中的节点
+     * 1->2->3->4
+     */
+    fun swapPairs(head: ListNode?): ListNode? {
+        return if (head?.next == null) head else swapPairsRec(0,head)
+    }
+
+    private fun swapPairsRec(index: Int,head: ListNode?): ListNode?{
+        if (head == null) return null
+        val node = head
+        if (head.next == null) return head
+        val nextHead = head.next?.next
+        if (index%2 == 0){
+            val nextNode = head.next
+            nextNode?.next = node
+            node.next = swapPairsRec(index+2, nextHead)
+            return nextNode
+        }else{
+            return null
         }
     }
 }
