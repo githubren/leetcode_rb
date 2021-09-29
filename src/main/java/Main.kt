@@ -318,12 +318,20 @@ object Main {
 //        println(lengthOfLongestSubstring2("ckilbkd"))
 
         val node1 = ListNode(1)
-        val node2 = ListNode(2)
-        val node3 = ListNode(3)
-        val node4 = ListNode(4)
+        val node2 = ListNode(1)
+        val node3 = ListNode(2)
+        val node4 = ListNode(3)
+        val node5 = ListNode(4)
+        val node6 = ListNode(4)
+        val node7 = ListNode(4)
+        val node8 = ListNode(5)
         node1.next = node2
         node2.next = node3
-//        node3.next = node4
+        node3.next = node4
+        node4.next = node5
+        node5.next = node6
+        node6.next = node7
+        node7.next = node8
 
         val nodea = ListNode(9)
         val nodeb = ListNode(9)
@@ -394,7 +402,18 @@ object Main {
 //            }
 //            println()
 //        }
-        var result = swapPairs(node1)
+//        var result = swapPairs(node1)
+//        while (result != null){
+//            print("${result.n} ")
+//            result = result.next
+//        }
+//        var result = rotateRight(node1,7)
+//        while (result != null){
+//            print("${result.n} ")
+//            result = result.next
+//        }
+
+        var result = deleteDuplicates(node1)
         while (result != null){
             print("${result.n} ")
             result = result.next
@@ -3434,4 +3453,35 @@ object Main {
             return null
         }
     }
+
+    /**
+     * 61. 旋转链表
+     */
+    fun rotateRight(head: ListNode?, k: Int): ListNode? {
+        if (head == null || k == 0) return head
+        var newHead = head
+        var tmTail = head
+        var countNode = head
+        var nodeSize = 0
+        while (countNode != null) {
+            nodeSize += 1
+            countNode = countNode.next
+        }
+        val newK = k % nodeSize
+        if (newK == 0) return head
+        for (i in 0 until nodeSize - newK) {
+            newHead = newHead?.next
+            if (i == nodeSize - newK - 1) {
+                tmTail?.next = null
+            }
+            tmTail = tmTail?.next
+        }
+        var tmHead = newHead
+        while (tmHead?.next != null) {
+            tmHead = tmHead.next
+        }
+        tmHead?.next = head
+        return newHead
+    }
+
 }
