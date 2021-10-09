@@ -318,12 +318,12 @@ object Main {
 //        println(lengthOfLongestSubstring2("ckilbkd"))
 
         val node1 = ListNode(1)
-        val node2 = ListNode(1)
-        val node3 = ListNode(2)
+        val node2 = ListNode(2)
+        val node3 = ListNode(3)
         val node4 = ListNode(3)
         val node5 = ListNode(4)
         val node6 = ListNode(4)
-        val node7 = ListNode(4)
+        val node7 = ListNode(5)
         val node8 = ListNode(5)
         node1.next = node2
         node2.next = node3
@@ -2505,19 +2505,30 @@ object Main {
 
     /**
      * 83. 删除排序链表中的重复元素
+     * 1->2->3->3->4->4->5
+     *
+     * 1->1->2->3->4->4->4->5
+     *
+     * 1->2->3->3->4->4->5->5
      */
     fun deleteDuplicates(head: ListNode?): ListNode? {
-        var p = head
-        var tmValue = head?.n
-        while (p != null){
-            if (p.next?.n == tmValue){
-                p.next = p.next?.next
+        var slow: ListNode? = ListNode(0)
+        slow?.next = head
+        val tmSlow = slow
+        var fast = head
+        while (fast != null){
+            if (fast.n == fast.next?.n){
+                while (fast?.n == fast?.next?.n){
+                    fast = fast?.next
+                }
             }else{
-                tmValue = p.next?.n
-                p = p.next
+                slow?.next = fast
+                slow = slow?.next
             }
+            fast = fast?.next
         }
-        return p
+        slow?.next = null
+        return tmSlow?.next
     }
 
     /**
