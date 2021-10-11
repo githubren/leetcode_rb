@@ -318,18 +318,18 @@ object Main {
 //        println(lengthOfLongestSubstring2("ckilbkd"))
 
         val node1 = ListNode(1)
-        val node2 = ListNode(4)
+        val node2 = ListNode(2)
         val node3 = ListNode(3)
-        val node4 = ListNode(2)
+        val node4 = ListNode(4)
         val node5 = ListNode(5)
         val node6 = ListNode(2)
         val node7 = ListNode(5)
         val node8 = ListNode(5)
         node1.next = node2
-        node2.next = node3
-        node3.next = node4
-        node4.next = node5
-        node5.next = node6
+//        node2.next = node3
+//        node3.next = node4
+//        node4.next = node5
+//        node5.next = node6
 //        node6.next = node7
 //        node7.next = node8
 
@@ -419,11 +419,19 @@ object Main {
 //            result = result.next
 //        }
 
-        var result = partition(node1,6)
-        while (result != null){
-            print("${result.n} ")
-            result = result.next
-        }
+//        var result = partition(node1,6)
+//        while (result != null){
+//            print("${result.n} ")
+//            result = result.next
+//        }
+
+//        var result = reverseBetween(node1,1,2)
+//        while (result != null){
+//            print("${result.n} ")
+//            result = result.next
+//        }
+
+        print(searchNum2(intArrayOf(-1,0,3,5,9,12),12))
     }
 
 
@@ -3532,5 +3540,81 @@ object Main {
         }
         st.next = noSmall.next
         return small.next
+    }
+
+    /**
+     * 92. 反转链表 II
+     */
+//    fun reverseBetween(head: ListNode?, left: Int, right: Int): ListNode? {
+//
+//    }
+
+    /**
+     * 704. 二分查找
+     */
+    fun searchNum(nums: IntArray, target: Int): Int {
+        return backTrackSearchNum(nums,0,nums.size-1,target)
+    }
+
+    private fun backTrackSearchNum(nums: IntArray,left: Int,right: Int,target: Int): Int{
+        if (left == right) return if (nums[left] == target) left else -1
+        if (left > right) return -1
+        val mid = (left+right)/2
+        return when {
+            nums[mid] < target -> backTrackSearchNum(nums, mid+1, right, target)
+            nums[mid] > target -> backTrackSearchNum(nums, left, mid-1, target)
+            else -> mid
+        }
+    }
+
+    /**
+     * 704. 二分查找
+     */
+    fun searchNum2(nums: IntArray, target: Int): Int {
+        var left = 0
+        var right = nums.size-1
+        while (left <= right){
+            val mid = (left+right)/2
+            when{
+                nums[mid] < target -> left = mid+1
+                nums[mid] > target -> right = mid-1
+                else -> return mid
+            }
+        }
+        return -1
+    }
+
+    fun firstBadVersion(n: Int) : Int {
+        var left = 1
+        var right = n
+        while(left <= right){
+            val mid = (left+right)/2
+            if(isBadVersion(mid)){
+                if(mid > 1){
+                    if(!isBadVersion(mid-1)){
+                        return mid
+                    }else{
+                        right = mid-1
+                    }
+                }else{
+                    return mid
+                }
+            }else{
+                if(mid < n){
+                    if(isBadVersion(mid+1)){
+                        return mid+1
+                    }else{
+                        left = mid+1
+                    }
+                }else{
+                    return mid
+                }
+            }
+        }
+        return n
+    }
+
+    private fun isBadVersion(i: Int): Boolean{
+        return true
     }
 }
