@@ -431,7 +431,10 @@ object Main {
 //            result = result.next
 //        }
 
-        print(searchNum2(intArrayOf(-1,0,3,5,9,12),12))
+//        print(searchNum2(intArrayOf(-1,0,3,5,9,12),12))
+        sortedSquares(intArrayOf(-7,-3,2,3,11)).forEach {
+            print("$it ")
+        }
     }
 
 
@@ -3616,5 +3619,53 @@ object Main {
 
     private fun isBadVersion(i: Int): Boolean{
         return true
+    }
+
+    /**
+     * 977. 有序数组的平方
+     */
+    fun sortedSquares(nums: IntArray): IntArray {
+        val result = IntArray(nums.size)
+        when {
+            nums[0] >= 0 -> {
+                for (i in nums.indices){
+                    result[i] = nums[i]*nums[i]
+                }
+            }
+            nums.last() <= 0 -> {
+                for (j in nums.size-1 downTo 0){
+                    result[nums.size-1-j] = nums[j]*nums[j]
+                }
+            }
+            else -> {
+                var left = 0
+                var right = nums.size-1
+                var index = nums.size-1
+                while (left<right){
+                    val leftMul = nums[left]*nums[left]
+                    val rightMul = nums[right]*nums[right]
+                    when{
+                        leftMul < rightMul -> {
+                            result[index--] = rightMul
+                            right--
+                        }
+                        leftMul > rightMul -> {
+                            result[index--] = leftMul
+                            left++
+                        }
+                        else -> {
+                            result[index--] = leftMul
+                            result[index--] = rightMul
+                            left++
+                            right--
+                        }
+                    }
+                }
+                if (left == right){
+                    result[index] = nums[left]*nums[left]
+                }
+            }
+        }
+        return result
     }
 }
