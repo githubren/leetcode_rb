@@ -3699,4 +3699,20 @@ object Main {
         }
         return tmp
     }
+
+    /**
+     * 1137. 第 N 个泰波那契数
+     */
+    fun tribonacci(n: Int): Int {
+        if (n < 2) return n
+        if (n == 2) return 1
+        val nums = intArrayOf(0,1,1,2)
+        for (i in 3..n){
+            nums[3] = nums[0]+nums[1]+nums[2]
+            nums[0] = nums[1]
+            nums[1] = nums[2]
+            nums[2] = nums[3]
+        }
+        return nums[3]
+    }
 }
