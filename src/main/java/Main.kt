@@ -22,9 +22,9 @@ object Main {
 //            print("$it ")
 //        }
 
-//        moveZeroes3(intArrayOf(1)).forEach {
-//            print("$it ")
-//        }
+        moveZeroes3(intArrayOf(2,1,3)).forEach {
+            print("$it ")
+        }
 
 //        val len = removeElement(intArrayOf(0,1,2,2,3,0,4,2),2)
 //        println(len)
@@ -432,9 +432,9 @@ object Main {
 //        }
 
 //        print(searchNum2(intArrayOf(-1,0,3,5,9,12),12))
-        sortedSquares(intArrayOf(-7,-3,2,3,11)).forEach {
-            print("$it ")
-        }
+//        sortedSquares(intArrayOf(-7,-3,2,3,11)).forEach {
+//            print("$it ")
+//        }
     }
 
 
@@ -607,6 +607,7 @@ object Main {
                 r++
             }
             while (r < nums.size - 1 && nums[r] == 0) r++
+            if (l == r) break
             nums[l] = nums[l] xor nums[r]
             nums[r] = nums[l] xor nums[r]
             nums[l] = nums[l] xor nums[r]
@@ -1322,7 +1323,7 @@ object Main {
     }
 
     /**
-     * 旋转数组
+     * 189. 旋转数组
      *
      * 1,2,3,4,5,6,7  5
      */
@@ -1341,6 +1342,14 @@ object Main {
         nums.forEach {
             print("$it ")
         }
+    }
+
+    fun rotate2(nums: IntArray,k: Int): Unit{
+        val newNums = IntArray(nums.size)
+        for (i in nums.indices){
+            newNums[(i+k)%nums.size] = nums[i]
+        }
+        System.arraycopy(newNums,0,nums,0,newNums.size)
     }
 
     /**
@@ -3667,5 +3676,27 @@ object Main {
             }
         }
         return result
+    }
+
+    /**
+     * 509. 斐波那契数
+     */
+    fun fib(n: Int): Int {
+        if (n == 0) return 0
+        if (n == 1) return 1
+        return fib(n-1)+ fib(n-2)
+    }
+
+    fun fib2(n: Int): Int{
+        if (n == 0 || n == 1) return n
+        var current = 0
+        var next = 1
+        var tmp = 0
+        for (i in 2..n){
+            tmp = current+next
+            current = next
+            next = tmp
+        }
+        return tmp
     }
 }
