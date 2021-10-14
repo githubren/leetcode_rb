@@ -22,9 +22,9 @@ object Main {
 //            print("$it ")
 //        }
 
-        moveZeroes3(intArrayOf(2,1,3)).forEach {
-            print("$it ")
-        }
+//        moveZeroes3(intArrayOf(2,1,3)).forEach {
+//            print("$it ")
+//        }
 
 //        val len = removeElement(intArrayOf(0,1,2,2,3,0,4,2),2)
 //        println(len)
@@ -435,6 +435,8 @@ object Main {
 //        sortedSquares(intArrayOf(-7,-3,2,3,11)).forEach {
 //            print("$it ")
 //        }
+
+        print(minCostClimbingStairs(intArrayOf(1, 100, 1, 1, 1, 100, 1, 1, 100, 1)))
     }
 
 
@@ -3742,7 +3744,21 @@ object Main {
         return nums[3]
     }
 
+    /**
+     * 746. 使用最小花费爬楼梯
+     * 1, 100, 1, 1, 1, 100, 1, 1, 100, 1
+     */
     fun minCostClimbingStairs(cost: IntArray): Int {
-
+        val newCost = IntArray(2+cost.size)
+        System.arraycopy(cost,0,newCost,1,cost.size)
+        val dp = IntArray(3)
+        dp[0] = newCost[0]
+        dp[1] = newCost[1]
+        for (i in 2 until newCost.size){
+            dp[2] = dp[0].coerceAtMost(dp[1])+newCost[i]
+            dp[0] = dp[1]
+            dp[1] = dp[2]
+        }
+        return dp[2]
     }
 }
