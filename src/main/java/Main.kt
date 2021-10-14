@@ -1962,6 +1962,32 @@ object Main {
         return result
     }
 
+    fun climbStairs2(n: Int): Int{
+        if (n == 1) return 1
+        if (n == 2) return 2
+        val dp = Array(n){IntArray(1)}
+        dp[0][0] = 1
+        dp[1][0] = 2
+        for (i in 2 until n){
+            dp[i][0] = dp[i-1][0]+dp[i-2][0]
+        }
+        return dp[n-1][0]
+    }
+
+    fun climbStairs3(n: Int): Int{
+        if (n == 1) return 1
+        if (n == 2) return 2
+        val dp = IntArray(3)
+        dp[0] = 1
+        dp[1] = 2
+        for (i in 2 until n){
+            dp[2] = dp[0]+dp[1]
+            dp[0] = dp[1]
+            dp[1] = dp[2]
+        }
+        return dp[2]
+    }
+
     /**
      * 买卖股票的最佳时机
      */
@@ -3714,5 +3740,9 @@ object Main {
             nums[2] = nums[3]
         }
         return nums[3]
+    }
+
+    fun minCostClimbingStairs(cost: IntArray): Int {
+
     }
 }
