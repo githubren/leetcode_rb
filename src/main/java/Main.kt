@@ -436,7 +436,9 @@ object Main {
 //            print("$it ")
 //        }
 
-        print(minCostClimbingStairs(intArrayOf(1, 100, 1, 1, 1, 100, 1, 1, 100, 1)))
+//        print(minCostClimbingStairs(intArrayOf(1, 100, 1, 1, 1, 100, 1, 1, 100, 1)))
+
+        print(rob2(intArrayOf(1,2,3,1,2,3,6,1,2,7,2)))
     }
 
 
@@ -3761,4 +3763,32 @@ object Main {
         }
         return dp[2]
     }
+
+    /**
+     * 213. 打家劫舍 II
+     * 2 3 2
+     */
+    fun rob2(nums: IntArray): Int {
+        if (nums.isEmpty()) return 0
+        if (nums.size == 1) return nums[0]
+        val subNums = IntArray(nums.size-1)
+        System.arraycopy(nums,1,subNums,0,subNums.size)
+        val res1 = rob(subNums)
+        System.arraycopy(nums,0,subNums,0,subNums.size)
+        val res2 = rob(subNums)
+        return res1.coerceAtLeast(res2)
+    }
+
+    fun rob3(nums: IntArray): Int{
+        val dp = IntArray(2)
+        dp[0] = 0
+        dp[1] = nums[0]
+        for (i in 1 until nums.size){
+            val tm = dp[0]+nums[i]
+            dp[0] = dp[1]
+            dp[1] = tm
+        }
+        return dp[0].coerceAtLeast(dp[1])
+    }
+
 }
