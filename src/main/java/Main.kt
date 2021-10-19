@@ -46,7 +46,7 @@ object Main {
 
 //        println(maxArea(intArrayOf(4,3,2,1,4)))
 //        println(minSubArrayLen(7, intArrayOf(2,3,1,2,4,3)))
-//        println(maxSubArray2(intArrayOf(-2,1,-3,4,-1,2,1,-5,4)))
+        println(maxSubArray2(intArrayOf(3,-1,2,-1)))
 //        plusOne(intArrayOf(7,2,8,5,0,9,1,2,9,5,3,6,6,7,3,2,8,4,3,7,9,5,7,7,4,7,4,9,4,7,0,1,1,1,7,4,0,0,6)).forEach {
 //            print("$it ")
 //        }
@@ -438,7 +438,9 @@ object Main {
 
 //        print(minCostClimbingStairs(intArrayOf(1, 100, 1, 1, 1, 100, 1, 1, 100, 1)))
 
-        print(rob2(intArrayOf(1,2,3,1,2,3,6,1,2,7,2)))
+//        print(rob2(intArrayOf(1,2,3,1,2,3,6,1,2,7,2)))
+
+//        print(deleteAndEarn(intArrayOf(1,1,1,2,4,5,5,5,6)))
     }
 
 
@@ -3789,6 +3791,24 @@ object Main {
             dp[1] = tm
         }
         return dp[0].coerceAtLeast(dp[1])
+    }
+
+    /**
+     * 740. 删除并获得点数
+     * 2,2,3,3,3,4             1,1,1,2,4,5,5,5,6
+     */
+    fun deleteAndEarn(nums: IntArray): Int {
+        val map = HashMap<Int,Int>()
+        var maxVal = 0
+        for (i in nums){
+            map[i] = map.getOrDefault(i,0)+1
+            maxVal = maxVal.coerceAtLeast(i)
+        }
+        val keys = IntArray(maxVal+1)
+        for (i in map.keys){
+            keys[i] =  map[i]!!*i
+        }
+        return rob(keys)
     }
 
 }
