@@ -46,7 +46,7 @@ object Main {
 
 //        println(maxArea(intArrayOf(4,3,2,1,4)))
 //        println(minSubArrayLen(7, intArrayOf(2,3,1,2,4,3)))
-        println(maxSubArray2(intArrayOf(3,-1,2,-1)))
+//        println(maxSubArray2(intArrayOf(-2,-3,-1)))
 //        plusOne(intArrayOf(7,2,8,5,0,9,1,2,9,5,3,6,6,7,3,2,8,4,3,7,9,5,7,7,4,7,4,9,4,7,0,1,1,1,7,4,0,0,6)).forEach {
 //            print("$it ")
 //        }
@@ -441,6 +441,8 @@ object Main {
 //        print(rob2(intArrayOf(1,2,3,1,2,3,6,1,2,7,2)))
 
 //        print(deleteAndEarn(intArrayOf(1,1,1,2,4,5,5,5,6)))
+
+        print(maxSubarraySumCircular(intArrayOf(5,-3,5)))
     }
 
 
@@ -3810,5 +3812,29 @@ object Main {
         }
         return rob(keys)
     }
+
+    /**
+     * 918. 环形子数组的最大和
+     * 5,-3,5
+     */
+    fun maxSubarraySumCircular(nums: IntArray): Int {
+        var tmp = nums[0]
+        var max = tmp
+        var sum = tmp
+        var min = 0
+        for (i in 1 until nums.size){
+            tmp = nums[i]+tmp.coerceAtLeast(0)
+            max = max.coerceAtLeast(tmp)
+            sum += nums[i]
+        }
+        var minTmp = nums[0]
+        for (j in 1 until nums.size-1){
+            minTmp = nums[j] + minTmp.coerceAtMost(0)
+            min = min.coerceAtMost(minTmp)
+        }
+        return max.coerceAtLeast(sum-min)
+    }
+
+
 
 }
