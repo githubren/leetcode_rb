@@ -442,7 +442,9 @@ object Main {
 
 //        print(deleteAndEarn(intArrayOf(1,1,1,2,4,5,5,5,6)))
 
-        print(maxSubarraySumCircular(intArrayOf(5,-3,5)))
+//        print(maxSubarraySumCircular(intArrayOf(5,-3,5)))
+
+        print(maxProduct(intArrayOf(-4,-3,-2)))
     }
 
 
@@ -3835,6 +3837,23 @@ object Main {
         return max.coerceAtLeast(sum-min)
     }
 
-
+    /**
+     * 152. 乘积最大子数组
+     * 2,-3,0,-2,4,4,0
+     */
+    fun maxProduct(nums: IntArray): Int {
+        var tmMax = nums[0]
+        var tmMin = nums[0]
+        var max = tmMax
+        var min = tmMin
+        for (i in 1 until nums.size){
+            val tmx = tmMax
+            tmMax = ((nums[i] * tmMax).coerceAtLeast(nums[i]*tmMin)).coerceAtLeast(nums[i])
+            tmMin = ((nums[i] * tmMin).coerceAtMost(nums[i]*tmx)).coerceAtMost(nums[i])
+            max = max.coerceAtLeast(tmMax)
+            min = min.coerceAtMost(tmMin)
+        }
+        return max.coerceAtLeast(min)
+    }
 
 }
