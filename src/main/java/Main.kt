@@ -4,6 +4,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlin.math.abs
+import kotlin.math.max
 
 object Main {
 
@@ -444,7 +445,9 @@ object Main {
 
 //        print(maxSubarraySumCircular(intArrayOf(5,-3,5)))
 
-        print(maxProduct(intArrayOf(-4,-3,-2)))
+//        print(maxProduct(intArrayOf(-4,-3,-2)))
+
+        print(getMaxLen(intArrayOf(1)))
     }
 
 
@@ -3854,6 +3857,36 @@ object Main {
             min = min.coerceAtMost(tmMin)
         }
         return max.coerceAtLeast(min)
+    }
+
+    /**
+     * 1567. 乘积为正数的最长子数组长度
+     * 1,2,3,5,-6,4,0,10      -1,-2,-3,0,1
+     */
+    fun getMaxLen(nums: IntArray): Int {
+        var maxLength = 0
+        var positive = if (nums[0] > 0) 1 else 0
+        var negative = if (nums[0] < 0) 1 else 0
+        for (i in 1 until nums.size){
+            when{
+                nums[i] < 0 ->{
+                    val newP = if (negative > 0) negative+1 else 0
+                    val newN = positive+1
+                    positive = newP
+                    negative = newN
+                }
+                nums[i] > 0 ->{
+                    positive += 1
+                    negative = if (negative > 0) negative+1 else 0
+                }
+                else ->{
+                    positive = 0
+                    negative = 0
+                }
+            }
+            maxLength = maxLength.coerceAtLeast(positive)
+        }
+        return maxLength.coerceAtLeast(positive)
     }
 
 }
