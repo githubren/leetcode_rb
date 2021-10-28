@@ -447,7 +447,9 @@ object Main {
 
 //        print(maxProduct(intArrayOf(-4,-3,-2)))
 
-        print(getMaxLen(intArrayOf(1)))
+//        print(getMaxLen(intArrayOf(1)))
+
+        print(maxScoreSightseeingPair(intArrayOf(8,1,5,2,6)))
     }
 
 
@@ -3887,6 +3889,20 @@ object Main {
             maxLength = maxLength.coerceAtLeast(positive)
         }
         return maxLength.coerceAtLeast(positive)
+    }
+
+    /**
+     * 1014. 最佳观光组合
+     * 8,1,5,2,6
+     */
+    fun maxScoreSightseeingPair(values: IntArray): Int {
+        var max = values[0]+0
+        var ans = 0
+        for (i in 1 until values.size){
+            ans = (max+values[i]-i).coerceAtLeast(ans)
+            max = max.coerceAtLeast(values[i]+i)
+        }
+        return ans
     }
 
 }
