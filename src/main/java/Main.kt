@@ -451,7 +451,9 @@ object Main {
 
 //        print(maxScoreSightseeingPair(intArrayOf(8,1,5,2,6)))
 
-        print(maxProfitInFreezing(intArrayOf(1,2,3,0,2)))
+//        print(maxProfitInFreezing(intArrayOf(1,2,3,0,2)))
+
+        print(maxProfitInFee(intArrayOf(1, 3, 2, 8, 4, 9),2))
     }
 
 
@@ -3942,6 +3944,33 @@ object Main {
         return dp[lastIndex][1].coerceAtLeast(dp[lastIndex][2])
     }
 
+    /**
+     * 714. 买卖股票的最佳时机含手续费
+     * 1, 3, 2, 8, 4, 9    2
+     *
+     * dp[i][0]表示第i天未持有的状态，dp[i][1]表示第i天持有的状态
+     */
+    fun maxProfitInFee(prices: IntArray, fee: Int): Int {
+        val dp = Array(prices.size){IntArray(2)}
+        val size = prices.size
+        dp[0][0] = 0
+        dp[0][1] = -prices[0]
+        for (i in 1 until size){
+            dp[i][0] = dp[i-1][0].coerceAtLeast(dp[i-1][1]+prices[i]-fee)
+            dp[i][1] = dp[i-1][1].coerceAtLeast(dp[i-1][0]-prices[i])
+        }
+        return dp[size-1][0].coerceAtLeast(dp[size-1][1])
+    }
 
+    fun maxProfitInFee2(prices: IntArray, fee: Int): Int {
+        var sell = 0
+        var hold = -prices[0]
+        for (i in 1 until prices.size){
+            val tmSell = sell
+            sell = sell.coerceAtLeast(hold+prices[i]-fee)
+            hold = hold.coerceAtLeast(tmSell-prices[i])
+        }
+        return sell
+    }
 
 }
