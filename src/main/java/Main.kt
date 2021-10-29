@@ -449,7 +449,9 @@ object Main {
 
 //        print(getMaxLen(intArrayOf(1)))
 
-        print(maxScoreSightseeingPair(intArrayOf(8,1,5,2,6)))
+//        print(maxScoreSightseeingPair(intArrayOf(8,1,5,2,6)))
+
+        print(maxProfitInFreezing(intArrayOf(1,2,3,0,2)))
     }
 
 
@@ -2048,6 +2050,16 @@ object Main {
         for (i in 1 until prices.size){
             dp[i] = dp[i-1].coerceAtMost(prices[i])
             max = max.coerceAtLeast(prices[i] - dp[i])
+        }
+        return max
+    }
+
+    fun maxProfit3(prices: IntArray): Int{
+        var minValue = prices[0]
+        var max = 0
+        for (i in 1 until prices.size){
+            minValue = minValue.coerceAtMost(prices[i])
+            max = max.coerceAtLeast(prices[i]-minValue)
         }
         return max
     }
@@ -3904,5 +3916,32 @@ object Main {
         }
         return ans
     }
+
+    /**
+     * 309. 最佳买卖股票时机含冷冻期
+     * 1,2,3,0,2
+     *
+     * 定义一个二维dp数组，dp[i][0]表示第i天卖出的价值，dp[i][1]表示第i天持有的价值
+     * 二维数组只能记录当天卖出或不卖出的价值，无法判定当天是否该卖或者在此基础上怎么判断是否该卖
+     *
+     * 解决方法：第二维用3个状态来维护
+     * dp[i][0]表示第i天处于持有状态   dp[i][1]表示第i天处于未持有并且在冷冻期   dp[i][2]表示第i天处于未持有并且不在冷冻期
+     *
+     */
+    fun maxProfitInFreezing(prices: IntArray): Int {
+        val dp = Array(prices.size){IntArray(3)}
+        val lastIndex = prices.size-1
+        dp[0][0] = -prices[0]
+        dp[0][1] = 0
+        dp[0][2] = 0
+        for (i in 1 until  prices.size){
+            dp[i][0] = dp[i-1][0].coerceAtLeast(dp[i-1][2]-prices[i])
+            dp[i][1] = dp[i-1][0]+prices[i]
+            dp[i][2] = dp[i-1][2].coerceAtLeast(dp[i-1][1])
+        }
+        return dp[lastIndex][1].coerceAtLeast(dp[lastIndex][2])
+    }
+
+
 
 }
