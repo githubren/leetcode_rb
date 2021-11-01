@@ -453,7 +453,9 @@ object Main {
 
 //        print(maxProfitInFreezing(intArrayOf(1,2,3,0,2)))
 
-        print(maxProfitInFee(intArrayOf(1, 3, 2, 8, 4, 9),2))
+//        print(maxProfitInFee(intArrayOf(1, 3, 2, 8, 4, 9),2))
+
+        print(wordBreak("leetcode", listOf("leet","code")))
     }
 
 
@@ -3971,6 +3973,23 @@ object Main {
             hold = hold.coerceAtLeast(tmSell-prices[i])
         }
         return sell
+    }
+
+    /**
+     * 139. 单词拆分
+     */
+    fun wordBreak(s: String, wordDict: List<String>): Boolean {
+        val result = BooleanArray(s.length+1)
+        result[0] = true
+        for (i in 1 until s.length+1){
+            for (j in 0 until i){
+                if (result[j] && wordDict.contains(s.substring(j,i))){
+                    result[i] = true
+                    break
+                }
+            }
+        }
+        return result[s.length]
     }
 
 }
