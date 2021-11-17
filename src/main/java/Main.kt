@@ -455,7 +455,11 @@ object Main {
 
 //        print(maxProfitInFee(intArrayOf(1, 3, 2, 8, 4, 9),2))
 
-        print(wordBreak("leetcode", listOf("leet","code")))
+//        print(wordBreak("leetcode", listOf("leet","code")))
+
+        generateParenthesis(3).forEach {
+            print("$it\n")
+        }
     }
 
 
@@ -3991,5 +3995,35 @@ object Main {
         }
         return result[s.length]
     }
+
+    /**
+     * 22. 括号生成
+     */
+    fun generateParenthesis(n: Int): List<String> {
+        val result = arrayListOf<String>()
+        val subString = StringBuilder();
+        backTraceParenthesis(subString,result,0,0,n)
+        return result
+    }
+
+    private fun backTraceParenthesis(subString: StringBuilder,result: ArrayList<String>,open: Int,close: Int,max: Int){
+        if (subString.length == max*2){
+            val tm = subString.toString()
+            result.add(tm)
+            return
+        }
+        if (open < max){
+            subString.append("(")
+            backTraceParenthesis(subString, result, open+1, close, max)
+            subString.deleteCharAt(subString.lastIndex)
+        }
+        if (close < open){
+            subString.append(")")
+            backTraceParenthesis(subString, result, open, close+1, max)
+            subString.deleteCharAt(subString.lastIndex)
+        }
+    }
+
+
 
 }
