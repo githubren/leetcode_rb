@@ -1,3 +1,4 @@
+import Main.backTraceUniquePathsWithObstacles
 import java.lang.StringBuilder
 import java.util.*
 import kotlin.collections.ArrayList
@@ -462,12 +463,17 @@ object Main {
 //        }
 
 //        print(divide(-100, -1))
-        generateMatrix(2).forEach {
-            it.forEach { n ->
-                print("$n ")
-            }
-            println()
-        }
+
+//        generateMatrix(2).forEach {
+//            it.forEach { n ->
+//                print("$n ")
+//            }
+//            println()
+//        }
+
+        print(uniquePathsWithObstacles2(arrayOf(intArrayOf(0,0,0,0,0,0,0),
+                                               intArrayOf(0,0,0,0,0,0,0),
+                                               intArrayOf(0,0,0,0,0,0,0))))
     }
 
 
@@ -4113,6 +4119,52 @@ object Main {
             }
         }
         return true
+    }
+
+    /**
+     * 63. 不同路径 II
+     * 回溯解法
+     */
+    fun uniquePathsWithObstacles(obstacleGrid: Array<IntArray>): Int {
+        val column = obstacleGrid[0].size
+        val raw = obstacleGrid.size
+        return backTraceUniquePathsWithObstacles(raw, column, obstacleGrid, 0, 0)
+    }
+
+    private fun backTraceUniquePathsWithObstacles(raw: Int, column: Int, matrix: Array<IntArray>, i: Int, j: Int): Int{
+        if (i == raw || j == column) return 0
+        if (matrix[i][j] == 1 || matrix[i][j] == 2) return 0
+        if (i == raw-1 && j == column-1) return 1
+        matrix[i][j] = 2
+        val n1 = backTraceUniquePathsWithObstacles(raw, column, matrix, i, j+1)
+        val n2 = backTraceUniquePathsWithObstacles(raw, column, matrix, i+1, j)
+        matrix[i][j] = 0
+        return n1+n2
+    }
+
+    /**
+     * 63. 不同路径 II
+     * 动态规划解法
+     */
+    fun uniquePathsWithObstacles2(obstacleGrid: Array<IntArray>): Int {
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[obstacleGrid.size-1][obstacleGrid[0].size-1] == 1) return 0
+        val dp = Array(obstacleGrid.size){IntArray(obstacleGrid[0].size)}
+        dp[0][0] = if (obstacleGrid[0][0] == 0) 1 else 0
+        for (i in obstacleGrid.indices){
+            for (j in obstacleGrid[0].indices){
+                if (i == 0 && j == 0) continue
+                if (i == 0){
+                    dp[i][j] = if (dp[i][j-1] == 1 && obstacleGrid[i][j] != 1) 1 else 0
+                    continue
+                }
+                if (j == 0){
+                    dp[i][j] = if (dp[i-1][j] == 1 && obstacleGrid[i][j] != 1) 1 else 0
+                    continue
+                }
+                dp[i][j] = if (obstacleGrid[i][j] != 1) dp[i-1][j]+dp[i][j-1] else 0
+            }
+        }
+        return dp[obstacleGrid.size-1][obstacleGrid[0].size-1]
     }
 
 }
