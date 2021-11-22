@@ -457,8 +457,16 @@ object Main {
 
 //        print(wordBreak("leetcode", listOf("leet","code")))
 
-        generateParenthesis(3).forEach {
-            print("$it\n")
+//        generateParenthesis(3).forEach {
+//            print("$it\n")
+//        }
+
+//        print(divide(-100, -1))
+        generateMatrix(2).forEach {
+            it.forEach { n ->
+                print("$n ")
+            }
+            println()
         }
     }
 
@@ -4024,6 +4032,87 @@ object Main {
         }
     }
 
+    /**
+     * 29. 两数相除
+     */
+    fun divide(dividend: Int, divisor: Int): Int {
+        return 0
+    }
 
+    /**
+     * 减法 位运算
+     */
+    fun subtraction(num1: Int,num2: Int): Int{
+        var a = num1.xor(num2)
+        var b = a.and(num2)
+        while (b != 0){
+            b = b.shl(1)
+            a = a.xor(b)
+            b = a.and(b)
+        }
+        return a
+    }
+
+    /**
+     * 加法 位运算
+     */
+    fun addition(num1: Int,num2: Int): Int{
+        var a = num1
+        var b = num2
+        while (b != 0){
+            val num = a.xor(b)
+            val carry = a.and(b).shl(1)
+            a = num
+            b = carry
+        }
+        return a
+    }
+
+    /**
+     * 59. 螺旋矩阵 II
+     */
+    fun generateMatrix(n: Int): Array<IntArray> {
+        val resultMatrix = Array(n){IntArray(n){-1}}
+        generateMatrixProcess(n,1,resultMatrix,0,0,3)
+        return resultMatrix
+    }
+
+    private fun generateMatrixProcess(n: Int,currentNum: Int,resultMatrix: Array<IntArray>,i: Int,j: Int,direction: Int): Boolean{
+        if (i == n || j == n || i < 0 || j < 0) return false
+        if (resultMatrix[i][j] != -1) return false
+        if (currentNum > n*n) return true
+        resultMatrix[i][j] = currentNum
+        when(direction){
+            0 -> {
+                return if (!generateMatrixProcess(n, currentNum+1, resultMatrix, i-1, j, direction)){
+                    generateMatrixProcess(n, currentNum+1, resultMatrix, i, j+1, 3)
+                }else{
+                    true
+                }
+            }
+            1 -> {
+                return if (!generateMatrixProcess(n, currentNum+1, resultMatrix, i+1, j, direction)){
+                    generateMatrixProcess(n, currentNum+1, resultMatrix, i, j-1, 2)
+                }else{
+                    true
+                }
+            }
+            2 -> {
+                return if (!generateMatrixProcess(n, currentNum+1, resultMatrix, i, j-1, direction)){
+                    generateMatrixProcess(n, currentNum+1, resultMatrix, i-1, j, 0)
+                }else{
+                    true
+                }
+            }
+            3 -> {
+                return if (!generateMatrixProcess(n, currentNum+1, resultMatrix, i, j+1, direction)){
+                    generateMatrixProcess(n, currentNum+1, resultMatrix, i+1, j, 1)
+                }else{
+                    true
+                }
+            }
+        }
+        return true
+    }
 
 }
