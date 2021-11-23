@@ -471,9 +471,16 @@ object Main {
 //            println()
 //        }
 
-        print(uniquePathsWithObstacles2(arrayOf(intArrayOf(0,0,0,0,0,0,0),
-                                               intArrayOf(0,0,0,0,0,0,0),
-                                               intArrayOf(0,0,0,0,0,0,0))))
+//        print(uniquePathsWithObstacles2(arrayOf(intArrayOf(0,0,0,0,0,0,0),
+//                                               intArrayOf(0,0,0,0,0,0,0),
+//                                               intArrayOf(0,0,0,0,0,0,0))))
+
+        subsetsWithDup(intArrayOf(4,4,4,1,4)).forEach {
+            it.forEach { n ->
+                print("$n ")
+            }
+            println()
+        }
     }
 
 
@@ -4165,6 +4172,31 @@ object Main {
             }
         }
         return dp[obstacleGrid.size-1][obstacleGrid[0].size-1]
+    }
+
+    /**
+     * 90. 子集 II
+     *
+     * 1 2 2
+     * 4 4 4 1 4
+     */
+    fun subsetsWithDup(nums: IntArray): List<List<Int>> {
+        val subList = arrayListOf<Int>()
+        val resList = arrayListOf<List<Int>>()
+        nums.sort()
+        backTraceSubsetsWithDup(nums,subList,resList,0)
+        return resList
+    }
+
+
+    private fun backTraceSubsetsWithDup(nums: IntArray, subList: ArrayList<Int>, resList: ArrayList<List<Int>>, index: Int){
+        if (resList.contains(subList)) return
+        resList.add(ArrayList(subList))
+        for (j in index until nums.size){
+            subList.add(nums[j])
+            backTraceSubsetsWithDup(nums,subList,resList,j+1)
+            subList.removeAt(subList.size-1)
+        }
     }
 
 }
