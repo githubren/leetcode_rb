@@ -475,12 +475,15 @@ object Main {
 //                                               intArrayOf(0,0,0,0,0,0,0),
 //                                               intArrayOf(0,0,0,0,0,0,0))))
 
-        subsetsWithDup(intArrayOf(4,4,4,1,4)).forEach {
-            it.forEach { n ->
-                print("$n ")
-            }
-            println()
-        }
+//        subsetsWithDup(intArrayOf(4,4,4,1,4)).forEach {
+//            it.forEach { n ->
+//                print("$n ")
+//            }
+//            println()
+//        }
+
+        var result = buildTree(intArrayOf(9,30,15,20,7), intArrayOf(30,9,20,15,7))
+
     }
 
 
@@ -4197,6 +4200,26 @@ object Main {
             backTraceSubsetsWithDup(nums,subList,resList,j+1)
             subList.removeAt(subList.size-1)
         }
+    }
+
+    /**
+     * 105. 从前序与中序遍历序列构造二叉树
+     */
+    fun buildTree(preorder: IntArray, inorder: IntArray): TreeNode? {
+        if (preorder.isEmpty() || inorder.isEmpty()) return null
+        val headTree = TreeNode(preorder[0])
+        val inorderIndex = inorder.indexOf(preorder[0])
+        val newLeftPreorder = IntArray(inorderIndex)
+        val newLeftInorder = IntArray(inorderIndex)
+        val newRightPreorder = IntArray(preorder.size-newLeftInorder.size-1)
+        val newRightInorder = IntArray(preorder.size-newLeftInorder.size-1)
+        System.arraycopy(preorder,1,newLeftPreorder,0,inorderIndex)
+        System.arraycopy(preorder,1+inorderIndex,newRightPreorder,0,preorder.size-inorderIndex-1)
+        System.arraycopy(inorder,0,newLeftInorder,0,inorderIndex)
+        System.arraycopy(inorder,1+inorderIndex,newRightInorder,0,preorder.size-inorderIndex-1)
+        headTree.left = buildTree(newLeftPreorder,newLeftInorder)
+        headTree.right = buildTree(newRightPreorder,newRightInorder)
+        return headTree
     }
 
 }
