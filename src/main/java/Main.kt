@@ -483,7 +483,11 @@ object Main {
 //        }
 
 //        var result = buildTree(intArrayOf(9,30,15,20,7), intArrayOf(30,9,20,15,7))
-        var result = buildTreePostorder(intArrayOf(9,30,15,20,7), intArrayOf(30,9,20,15,7))
+//        var result = buildTreePostorder(intArrayOf(9,30,15,20,7), intArrayOf(30,9,20,15,7))
+
+        print(minimumTotal(arrayListOf(arrayListOf(-1),
+            arrayListOf(2,3),
+            arrayListOf(1,-1,-3))))
 
     }
 
@@ -4241,6 +4245,64 @@ object Main {
         headTree.left = buildTree(newLeftInorder,newLeftPostorder)
         headTree.right = buildTree(newRightInorder,newRightPostorder)
         return headTree
+    }
+
+    /**
+     * 120. 三角形最小路径和
+     *      -1
+     *    2   3
+     *  1  -1  -3
+     *1   1   1   1
+     */
+    fun minimumTotal(triangle: List<List<Int>>): Int {
+        if (triangle.size == 1) return triangle[0][0]
+        val dp = Array(triangle.size){IntArray(triangle.size)}
+        dp[0][0] = triangle[0][0]
+        var min = Int.MAX_VALUE
+        for (i in 1 until triangle.size){
+            dp[i][0] = dp[i-1][0]+triangle[i][0]
+            if (i == triangle.size-1){
+                min = min.coerceAtMost(dp[i][0])
+            }
+            for (j in 1 until i){
+                dp[i][j] = dp[i-1][j-1].coerceAtMost(dp[i-1][j])+triangle[i][j]
+                if (i == triangle.size-1){
+                    min = min.coerceAtMost(dp[i][j])
+                }
+            }
+            dp[i][i] = dp[i-1][i-1]+triangle[i][i]
+            if (i == triangle.size-1){
+                min = min.coerceAtMost(dp[i][i])
+            }
+        }
+        return min
+    }
+
+    /**
+     * 空间复杂度为O(n)的解法  上面为O(n*n)
+     */
+    fun minimumTotal2(triangle: List<List<Int>>): Int {
+        if (triangle.size == 1) return triangle[0][0]
+        val dp = IntArray(triangle.size)
+        dp[0] = triangle[0][0]
+        var min = Int.MAX_VALUE
+        for (i in 1 until triangle.size){
+            dp[i] = dp[i-1]+triangle[i][i]
+            if (i == triangle.size-1){
+                min = min.coerceAtMost(dp[i])
+            }
+            for (j in i-1 downTo 1){
+                dp[j] = dp[j-1].coerceAtMost(dp[j])+triangle[i][j]
+                if (i == triangle.size-1){
+                    min = min.coerceAtMost(dp[j])
+                }
+            }
+            dp[0] = dp[0]+triangle[i][0]
+            if (i == triangle.size-1){
+                min = min.coerceAtMost(dp[0])
+            }
+        }
+        return min
     }
 
 }
