@@ -482,7 +482,8 @@ object Main {
 //            println()
 //        }
 
-        var result = buildTree(intArrayOf(9,30,15,20,7), intArrayOf(30,9,20,15,7))
+//        var result = buildTree(intArrayOf(9,30,15,20,7), intArrayOf(30,9,20,15,7))
+        var result = buildTreePostorder(intArrayOf(9,30,15,20,7), intArrayOf(30,9,20,15,7))
 
     }
 
@@ -4219,6 +4220,26 @@ object Main {
         System.arraycopy(inorder,1+inorderIndex,newRightInorder,0,preorder.size-inorderIndex-1)
         headTree.left = buildTree(newLeftPreorder,newLeftInorder)
         headTree.right = buildTree(newRightPreorder,newRightInorder)
+        return headTree
+    }
+
+    /**
+     * 106. 从中序与后序遍历序列构造二叉树
+     */
+    fun buildTreePostorder(inorder: IntArray, postorder: IntArray): TreeNode? {
+        if (inorder.isEmpty() || postorder.isEmpty()) return null
+        val headTree = TreeNode(postorder[postorder.size-1])
+        val inorderIndex = inorder.indexOf(postorder[postorder.size-1])
+        val newLeftPostorder = IntArray(inorderIndex)
+        val newLeftInorder = IntArray(inorderIndex)
+        val newRightPostorder = IntArray(postorder.size-newLeftInorder.size-1)
+        val newRightInorder = IntArray(postorder.size-newLeftInorder.size-1)
+        System.arraycopy(postorder,0,newLeftPostorder,0,inorderIndex)
+        System.arraycopy(postorder,inorderIndex,newRightPostorder,0,postorder.size-inorderIndex-1)
+        System.arraycopy(inorder,0,newLeftInorder,0,inorderIndex)
+        System.arraycopy(inorder,1+inorderIndex,newRightInorder,0,postorder.size-inorderIndex-1)
+        headTree.left = buildTree(newLeftInorder,newLeftPostorder)
+        headTree.right = buildTree(newRightInorder,newRightPostorder)
         return headTree
     }
 
