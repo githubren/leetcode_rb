@@ -485,9 +485,11 @@ object Main {
 //        var result = buildTree(intArrayOf(9,30,15,20,7), intArrayOf(30,9,20,15,7))
 //        var result = buildTreePostorder(intArrayOf(9,30,15,20,7), intArrayOf(30,9,20,15,7))
 
-        print(minimumTotal(arrayListOf(arrayListOf(-1),
-            arrayListOf(2,3),
-            arrayListOf(1,-1,-3))))
+//        print(minimumTotal(arrayListOf(arrayListOf(-1),
+//            arrayListOf(2,3),
+//            arrayListOf(1,-1,-3))))
+
+        print(lengthOfLastWord2("luffy       "))
 
     }
 
@@ -4303,6 +4305,37 @@ object Main {
             }
         }
         return min
+    }
+
+    /**
+     * 58. 最后一个单词的长度
+     */
+    fun lengthOfLastWord(s: String): Int {
+        val words = s.split(" ")
+        var lastLength = 0
+        for (i in words.indices){
+            if (words[i].isEmpty()) continue
+            lastLength = words[i].length
+        }
+        return lastLength
+    }
+
+    fun lengthOfLastWord2(s: String): Int {
+        var end = -1
+        var start = 0
+        for (i in s.length-1 downTo 0){
+            if (s[i] != ' '){
+                if (end == -1){
+                    end = i
+                }
+            }else{
+                if (end != -1){
+                    start = i+1
+                    break
+                }
+            }
+        }
+        return end-start+1
     }
 
 }
