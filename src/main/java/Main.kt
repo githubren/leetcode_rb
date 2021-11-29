@@ -489,7 +489,10 @@ object Main {
 //            arrayListOf(2,3),
 //            arrayListOf(1,-1,-3))))
 
-        print(lengthOfLastWord2("luffy       "))
+//        print(lengthOfLastWord2("luffy       "))
+
+
+        print(longestConsecutive(intArrayOf(100,4,200,1,3,2)))
 
     }
 
@@ -4336,6 +4339,30 @@ object Main {
             }
         }
         return end-start+1
+    }
+
+    /**
+     * 128. 最长连续序列
+     *
+     * 100,4,200,1,3,2
+     */
+    fun longestConsecutive(nums: IntArray): Int {
+        val map = HashMap<Int,Int>()
+        var maxLength = 0
+        for (i in nums.indices){
+            if (!map.containsKey(nums[i])){
+                val left = map[nums[i]-1]?:0
+                val right = map[nums[i]+1]?:0
+
+                map[nums[i]] = 1
+                val length = left+right+1
+                maxLength = maxLength.coerceAtLeast(length)
+
+                map[nums[i]-left] = length
+                map[nums[i]+right] = length
+            }
+        }
+        return maxLength
     }
 
 }
