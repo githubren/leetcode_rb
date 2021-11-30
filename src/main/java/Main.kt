@@ -494,7 +494,9 @@ object Main {
 
 //        print(longestConsecutive(intArrayOf(100,4,200,1,3,2)))
 
-        print(uniquePaths2(3,2))
+//        print(uniquePaths2(3,2))
+
+        print(addBinary("1101001010110101010101010101000101010101010101010101010101010101010010","10101010010101010100101001010010101010010101011"))
 
     }
 
@@ -4408,6 +4410,64 @@ object Main {
             }
         }
         return dp[n-1]
+    }
+
+    /**
+     * 67. 二进制求和
+     * 11 01
+     */
+    fun addBinary(a: String, b: String): String {
+        if (a == "0") return b
+        if (b == "0") return a
+        val maxLength = a.length.coerceAtLeast(b.length)
+        val aArray = IntArray(maxLength+1)
+        val bArray = IntArray(maxLength+1)
+        val sbResult = StringBuilder()
+        var isNeedCarry = false
+        for (i in a.indices){
+            aArray[aArray.size-a.length+i] = a[i]-'0'
+        }
+        for (j in b.indices){
+            bArray[bArray.size-b.length+j] = b[j]-'0'
+        }
+        val lastIndex = aArray.size-1
+
+        for (m in lastIndex downTo 0){
+            if (!isNeedCarry){
+                if (aArray[m]==1 && bArray[m]==1){
+                    sbResult.insert(0,"0")
+                    isNeedCarry = true
+                    continue
+                }
+                if (aArray[m]==0 && bArray[m]==0){
+                    sbResult.insert(0,"0")
+                    isNeedCarry = false
+                    continue
+                }
+                sbResult.insert(0,"1")
+                isNeedCarry = false
+            }else{
+                if (aArray[m]==1 && bArray[m]==1){
+                    sbResult.insert(0,"1")
+                    isNeedCarry = true
+                    continue
+                }
+                if (aArray[m]==0 && bArray[m]==0){
+                    sbResult.insert(0,"1")
+                    isNeedCarry = false
+                    continue
+                }
+                sbResult.insert(0,"0")
+                isNeedCarry = true
+            }
+        }
+        val result = sbResult.toString()
+        var end = 0
+        for (i in result.indices){
+            if (result[i] == '1') break
+            end++
+        }
+        return result.substring(end)
     }
 
 }
