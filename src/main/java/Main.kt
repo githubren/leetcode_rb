@@ -492,7 +492,9 @@ object Main {
 //        print(lengthOfLastWord2("luffy       "))
 
 
-        print(longestConsecutive(intArrayOf(100,4,200,1,3,2)))
+//        print(longestConsecutive(intArrayOf(100,4,200,1,3,2)))
+
+        print(uniquePaths2(3,2))
 
     }
 
@@ -4363,6 +4365,49 @@ object Main {
             }
         }
         return maxLength
+    }
+
+    /**
+     * 62. 不同路径
+     */
+    fun uniquePaths(m: Int, n: Int): Int {
+        val dp = Array(m){IntArray(n)}
+        for (i in 0 until m){
+            for (j in 0 until n){
+                if (i == 0){
+                    dp[0][j] = 1
+                    continue
+                }
+                if (j == 0){
+                    dp[i][0] = 1
+                    continue
+                }
+                dp[i][j] = dp[i-1][j]+dp[i][j-1]
+            }
+        }
+        return dp[m-1][n-1]
+    }
+
+    /**
+     * 62. 不同路径
+     * 滑动窗口
+     */
+    fun uniquePaths2(m: Int, n: Int): Int {
+        val dp = IntArray(n)
+        for (i in 0 until m){
+            for (j in 0 until n){
+                if (i == 0){
+                    dp[j] = 1
+                    continue
+                }
+                if (j == 0){
+                    dp[j] = 1
+                    continue
+                }
+                dp[j] += dp[j-1]
+            }
+        }
+        return dp[n-1]
     }
 
 }
