@@ -1,6 +1,7 @@
 import Main.backTraceUniquePathsWithObstacles
 import java.lang.StringBuilder
 import java.util.*
+import java.util.concurrent.LinkedBlockingQueue
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
@@ -496,8 +497,14 @@ object Main {
 
 //        print(uniquePaths2(3,2))
 
-        print(addBinary("1101001010110101010101010101000101010101010101010101010101010101010010","10101010010101010100101001010010101010010101011"))
+//        print(addBinary("1101001010110101010101010101000101010101010101010101010101010101010010","10101010010101010100101001010010101010010101011"))
 
+//            solve(arrayOf(charArrayOf('X','X','X','X','X'),
+//                          charArrayOf('X','O','O','X','X'),
+//                          charArrayOf('X','X','O','X','X'),
+//                          charArrayOf('X','O','O','O','X'),
+//                          charArrayOf('X','X','X','X','X'),))
+        solve(arrayOf(charArrayOf('O')))
     }
 
 
@@ -4468,6 +4475,110 @@ object Main {
             end++
         }
         return result.substring(end)
+    }
+
+    /**
+     * 130. 被围绕的区域
+     * x x x x
+     * x o o x
+     * x x o x
+     * x o o o
+     */
+    fun solve(board: Array<CharArray>): Unit {
+        if (board.size == 1) return
+        if (board[0].size == 1) return
+        val visitedArray = Array(board.size){ BooleanArray(board[0].size) }
+        val dp = Array(board.size){ BooleanArray(board[0].size) }
+
+        for (i in board.indices){
+            if (board[i][0] == 'O' && !visitedArray[i][0]){
+                bfsSolve(dp, i, 0,visitedArray, board)
+            }
+            if (board[i][board[i].size-1] == 'O' && !visitedArray[i][board[i].size-1]){
+                bfsSolve(dp,i,board[i].size-1,visitedArray, board)
+            }
+        }
+
+        for (j in board[0].indices){
+            if (board[0][j] == 'O' && !visitedArray[0][j]){
+                bfsSolve(dp,0,j,visitedArray, board)
+            }
+            if (board[board.size-1][j] == 'O' && !visitedArray[board.size-1][j]){
+                bfsSolve(dp,board.size-1,j, visitedArray, board)
+            }
+        }
+
+        for (i in dp.indices){
+            for (j in dp[i].indices){
+                if (board[i][j] == 'O' && !dp[i][j]){
+                    board[i][j] = 'X'
+                }
+            }
+        }
+
+        board.forEach {
+            it.forEach { c ->
+                print("$c ")
+            }
+            println()
+        }
+    }
+
+    private fun bfsSolve(dp: Array<BooleanArray>, i: Int, j: Int, visitedArray: Array<BooleanArray>, board: Array<CharArray>) {
+        dp[i][j] = true
+        visitedArray[i][j] = true
+        val queue = LinkedBlockingQueue<IntArray>()
+        val array = intArrayOf(i, j)
+        queue.put(array)
+        while (queue.isNotEmpty()) {
+            val topArray = queue.poll()
+            val a = topArray[0]
+            val b = topArray[1]
+            if (a > 0){
+                checkAdjoin(visitedArray, a-1, b, board, dp, queue)
+            }
+            if (a < board.size-1){
+                checkAdjoin(visitedArray, a+1, b, board, dp, queue)
+            }
+            if (b > 0){
+                checkAdjoin(visitedArray, a, b-1, board, dp, queue)
+            }
+            if (b < board[0].size-1){
+                checkAdjoin(visitedArray, a, b+1, board, dp, queue)
+            }
+
+            if (a==0 && b==0){
+                checkAdjoin(visitedArray, a+1, b, board, dp, queue)
+                checkAdjoin(visitedArray, a, b+1, board, dp, queue)
+            }
+            if (a==board.size-1 && b==0){
+                checkAdjoin(visitedArray, a-1, b, board, dp, queue)
+                checkAdjoin(visitedArray, a, b+1, board, dp, queue)
+            }
+            if (a==0 && b==board[0].size-1){
+                checkAdjoin(visitedArray, a+1, b, board, dp, queue)
+                checkAdjoin(visitedArray, a, b-1, board, dp, queue)
+            }
+            if (a==board.size-1 && b==board[0].size-1){
+                checkAdjoin(visitedArray, a-1, b, board, dp, queue)
+                checkAdjoin(visitedArray, a, b-1, board, dp, queue)
+            }
+        }
+    }
+
+    private fun checkAdjoin(
+        visitedArray: Array<BooleanArray>,
+        a: Int,
+        b: Int,
+        board: Array<CharArray>,
+        dp: Array<BooleanArray>,
+        queue: LinkedBlockingQueue<IntArray>
+    ) {
+        if (!visitedArray[a][b] && board[a][b] == 'O') {
+            dp[a][b] = true
+            visitedArray[a][b] = true
+            queue.put(intArrayOf(a, b))
+        }
     }
 
 }
