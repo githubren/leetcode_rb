@@ -504,7 +504,9 @@ object Main {
 //                          charArrayOf('X','X','O','X','X'),
 //                          charArrayOf('X','O','O','O','X'),
 //                          charArrayOf('X','X','X','X','X'),))
-        solve(arrayOf(charArrayOf('O')))
+//        solve(arrayOf(charArrayOf('O')))
+
+        print(canCompleteCircuit(intArrayOf(2,3,4), intArrayOf(3,4,3)))
     }
 
 
@@ -4579,6 +4581,50 @@ object Main {
             visitedArray[a][b] = true
             queue.put(intArrayOf(a, b))
         }
+    }
+
+    /**
+     * 134. 加油站
+     * gas   1,2,3,4,5     2,3,4
+     * cost  3,4,5,1,2     3,4,3
+     */
+    fun canCompleteCircuit(gas: IntArray, cost: IntArray): Int {
+        var maxGas = 0
+        var maxCost = 0
+        for (i in gas.indices){
+            maxGas += gas[i]
+            maxCost += cost[i]
+        }
+        if (maxCost>maxGas) return -1
+        var currentGas = 0
+        val length = gas.size
+        var isEnd = false
+        for (i in gas.indices){
+            if (gas[i] < cost[i] || (gas[i] == 0 && cost[i] == 0)) continue
+            for (j in i until i+length){
+                currentGas += gas[j%length]
+                if (currentGas < cost[j%length]) {
+                    currentGas = 0
+                    break
+                }
+                currentGas -= cost[j%length]
+                if (j == i+length-1){
+                    isEnd = true
+                }
+            }
+            if (isEnd) return i
+        }
+        return -1
+    }
+
+    fun canCompleteCircuit2(gas: IntArray, cost: IntArray): Int {
+        var currentGas = 0
+        val length = gas.size
+        for (i in gas.indices){
+            if ((gas[i] == 0 && cost[i] == 0) || gas[i] < cost[i]) continue
+            currentGas += gas[i]
+        }
+        return -1
     }
 
 }
