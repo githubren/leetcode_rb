@@ -506,7 +506,9 @@ object Main {
 //                          charArrayOf('X','X','X','X','X'),))
 //        solve(arrayOf(charArrayOf('O')))
 
-        print(canCompleteCircuit(intArrayOf(2,3,4), intArrayOf(3,4,3)))
+//        print(canCompleteCircuit(intArrayOf(2,3,4), intArrayOf(3,4,3)))
+
+        print(singleNumber2(intArrayOf(0,1,0,1,0,1,99)))
     }
 
 
@@ -4625,6 +4627,24 @@ object Main {
             currentGas += gas[i]
         }
         return -1
+    }
+
+    /**
+     * 137. 只出现一次的数字 II
+     */
+    fun singleNumber2(nums: IntArray): Int {
+        val map = HashMap<Int,Int>()
+        var result = 0
+        for (i in nums.indices){
+            map[nums[i]] = map.getOrDefault(nums[i],0)+1
+        }
+        for (key in map.keys){
+            if (map[key] == 1){
+                result = key
+                break
+            }
+        }
+        return result
     }
 
 }
