@@ -508,7 +508,9 @@ object Main {
 
 //        print(canCompleteCircuit(intArrayOf(2,3,4), intArrayOf(3,4,3)))
 
-        print(singleNumber2(intArrayOf(0,1,0,1,0,1,99)))
+//        print(singleNumber2(intArrayOf(0,1,0,1,0,1,99)))
+
+        print(evalRPN(arrayOf("4","13","5","/","+")))
     }
 
 
@@ -4645,6 +4647,41 @@ object Main {
             }
         }
         return result
+    }
+
+    /**
+     * 150. 逆波兰表达式求值
+     */
+    fun evalRPN(tokens: Array<String>): Int {
+        val stack = Stack<String>()
+        for (i in tokens.indices){
+            when (tokens[i]){
+                "+" ->{
+                    val a = stack.pop().toInt()
+                    val b = stack.pop().toInt()
+                    stack.push((a+b).toString())
+                }
+                "-" ->{
+                    val a = stack.pop().toInt()
+                    val b = stack.pop().toInt()
+                    stack.push((b-a).toString())
+                }
+                "*" ->{
+                    val a = stack.pop().toInt()
+                    val b = stack.pop().toInt()
+                    stack.push((a*b).toString())
+                }
+                "/" ->{
+                    val a = stack.pop().toInt()
+                    val b = stack.pop().toInt()
+                    stack.push((b/a).toString())
+                }
+                else ->{
+                    stack.push(tokens[i])
+                }
+            }
+        }
+        return stack.peek().toInt()
     }
 
 }
