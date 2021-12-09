@@ -510,7 +510,9 @@ object Main {
 
 //        print(singleNumber2(intArrayOf(0,1,0,1,0,1,99)))
 
-        print(evalRPN(arrayOf("4","13","5","/","+")))
+//        print(evalRPN(arrayOf("4","13","5","/","+")))
+
+        print(findPeakElement(intArrayOf(3,1,2)))
     }
 
 
@@ -4682,6 +4684,44 @@ object Main {
             }
         }
         return stack.peek().toInt()
+    }
+
+    /**
+     * 162. 寻找峰值
+     */
+    fun findPeakElement(nums: IntArray): Int {
+        if (nums.size == 1) return 0
+        var left = 0
+        var right = nums.size-1
+        var mid: Int
+        while (left < right){
+            if (left == right-1){
+                return if (nums[left] > nums[right]) left else right
+            }
+            mid = (left+right)/2
+            if (mid == 0){
+                return if (nums[mid] > nums[mid+1]) mid else mid+1
+            }
+            if (mid == nums.size-1){
+                return if (nums[mid] > nums[mid-1]) mid else mid-1
+            }
+            if (nums[mid-1] < nums[mid] && nums[mid] < nums[mid+1]){
+                left = mid+1
+                continue
+            }
+            if (nums[mid-1] > nums[mid] && nums[mid] > nums[mid+1]){
+                right = mid-1
+                continue
+            }
+            if (nums[mid-1] < nums[mid] && nums[mid] > nums[mid+1]){
+                return mid
+            }
+            if (nums[mid] < nums[mid-1] && nums[mid] < nums[mid+1]){
+                left = mid
+                continue
+            }
+        }
+        return left
     }
 
 }
