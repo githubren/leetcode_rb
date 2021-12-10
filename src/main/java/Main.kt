@@ -512,7 +512,15 @@ object Main {
 
 //        print(evalRPN(arrayOf("4","13","5","/","+")))
 
-        print(findPeakElement(intArrayOf(3,1,2)))
+//        print(findPeakElement(intArrayOf(3,1,2)))
+
+//        print(calculateMinimumHP(arrayOf(intArrayOf(-2,-3,3),
+//                                         intArrayOf(-5,-10,1),
+//                                         intArrayOf(10,30,-5))))
+
+        print(calculateMinimumHP(arrayOf(intArrayOf(1,-2,3),
+                                         intArrayOf(2,-2,-2),
+                                         intArrayOf(2,-3,-1))))
     }
 
 
@@ -4722,6 +4730,35 @@ object Main {
             }
         }
         return left
+    }
+
+    /**
+     * 174. 地下城游戏
+     * -2   -3   3
+     * -5  -10   1
+     * 10   30  -5
+     *
+     * 1 -2 3
+     * 2 -2 -2
+     */
+    fun calculateMinimumHP(dungeon: Array<IntArray>): Int {
+        val dp = Array(dungeon.size){IntArray(dungeon[0].size)}
+        dp[dungeon.size-1][dungeon[0].size-1] = (1-dungeon[dungeon.size-1][dungeon[0].size-1]).coerceAtLeast(1)
+        for (i in dungeon.size-1 downTo 0){
+            for (j in dungeon[0].size-1 downTo 0){
+                if (i == dungeon.size-1 && j == dungeon[i].size-1) continue
+                if (i == dungeon.size-1){
+                    dp[i][j] = (dp[i][j+1]-dungeon[i][j]).coerceAtLeast(1)
+                    continue
+                }
+                if (j == dungeon[i].size-1){
+                    dp[i][j] = (dp[i+1][j]-dungeon[i][j]).coerceAtLeast(1)
+                    continue
+                }
+                dp[i][j] = (dp[i+1][j].coerceAtMost(dp[i][j+1])-dungeon[i][j]).coerceAtLeast(1)
+            }
+        }
+        return dp[0][0].coerceAtLeast(1)
     }
 
 }
