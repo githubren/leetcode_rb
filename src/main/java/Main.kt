@@ -518,9 +518,14 @@ object Main {
 //                                         intArrayOf(-5,-10,1),
 //                                         intArrayOf(10,30,-5))))
 
-        print(calculateMinimumHP(arrayOf(intArrayOf(1,-2,3),
-                                         intArrayOf(2,-2,-2),
-                                         intArrayOf(2,-3,-1))))
+//        print(calculateMinimumHP(arrayOf(intArrayOf(1,-2,3),
+//                                         intArrayOf(2,-2,-2),
+//                                         intArrayOf(2,-3,-1))))
+
+        print(numIslands(arrayOf(charArrayOf('1','1','1','1','0'),
+            charArrayOf('1','1','0','1','0'),
+            charArrayOf('1','1','0','0','0'),
+            charArrayOf('0','0','0','0','0'))))
     }
 
 
@@ -4759,6 +4764,35 @@ object Main {
             }
         }
         return dp[0][0].coerceAtLeast(1)
+    }
+
+    /**
+     * 200. 岛屿数量
+     */
+    fun numIslands(grid: Array<CharArray>): Int {
+        var lands = 0
+        val isVisited = Array(grid.size){BooleanArray(grid[0].size)}
+        for (i in grid.indices){
+            for (j in grid[i].indices){
+                if (isVisited[i][j]) continue
+                if (grid[i][j] == '0') continue
+                lands+=1
+                bfsNumIslands(grid, isVisited, i, j)
+            }
+        }
+        return lands
+    }
+
+    private fun bfsNumIslands(grid: Array<CharArray>, isVisited: Array<BooleanArray>, i: Int, j: Int){
+        if (i < 0 || i > grid.size-1) return
+        if (j < 0 || j > grid[0].size-1) return
+        if (isVisited[i][j]) return
+        if (grid[i][j] == '0') return
+        isVisited[i][j] = true
+        bfsNumIslands(grid, isVisited, i, j-1)
+        bfsNumIslands(grid, isVisited, i-1, j)
+        bfsNumIslands(grid, isVisited, i, j+1)
+        bfsNumIslands(grid, isVisited, i+1, j)
     }
 
 }
