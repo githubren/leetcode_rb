@@ -1,4 +1,5 @@
 import Main.backTraceUniquePathsWithObstacles
+import com.sun.org.apache.xpath.internal.operations.Bool
 import java.lang.StringBuilder
 import java.util.*
 import java.util.concurrent.LinkedBlockingQueue
@@ -7,6 +8,7 @@ import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.sqrt
 
 object Main {
 
@@ -522,10 +524,19 @@ object Main {
 //                                         intArrayOf(2,-2,-2),
 //                                         intArrayOf(2,-3,-1))))
 
-        print(numIslands(arrayOf(charArrayOf('1','1','1','1','0'),
-            charArrayOf('1','1','0','1','0'),
-            charArrayOf('1','1','0','0','0'),
-            charArrayOf('0','0','0','0','0'))))
+//        print(numIslands(arrayOf(charArrayOf('1','1','1','1','0'),
+//            charArrayOf('1','1','0','1','0'),
+//            charArrayOf('1','1','0','0','0'),
+//            charArrayOf('0','0','0','0','0'))))
+
+//        print(countPrimes(10))
+
+        combinationSum3(2,18).forEach {
+            it.forEach { n ->
+                print("$n ")
+            }
+            println()
+        }
     }
 
 
@@ -4793,6 +4804,54 @@ object Main {
         bfsNumIslands(grid, isVisited, i-1, j)
         bfsNumIslands(grid, isVisited, i, j+1)
         bfsNumIslands(grid, isVisited, i+1, j)
+    }
+
+//    /**
+//     * 204. 计数质数
+//     */
+//    fun countPrimes(n: Int): Int {
+//        if (n == 0 || n == 1) return 0
+//        var count = 0
+//        for (i in 2 until n){
+//            count += if (isPrimes(i)) 1 else 0
+//        }
+//        return count
+//    }
+//
+//    private fun isPrimes(x: Int): Boolean{
+//        var i = 2
+//        while (i*i<=x){
+//            if (x%i == 0){
+//                return false
+//            }
+//            i++
+//        }
+//        return true
+//    }
+
+    /**
+     * 216. 组合总和 III
+     */
+    fun combinationSum3(k: Int, n: Int): List<List<Int>> {
+        val subList = arrayListOf<Int>()
+        val result = arrayListOf<ArrayList<Int>>()
+        backTraceCombinationSum3(subList, result,0, k, n,0)
+        return result
+    }
+
+    private fun backTraceCombinationSum3(subList: ArrayList<Int>, result: ArrayList<ArrayList<Int>>,currentSum: Int, k: Int, n: Int,i: Int){
+        if (currentSum > n) return
+        if (subList.size == k && currentSum == n){
+            val tmpList = ArrayList(subList)
+            result.add(tmpList)
+            return
+        }
+        if (subList.size == k && currentSum < n) return
+        for (j in i+1 .. 9){
+            subList.add(j)
+            backTraceCombinationSum3(subList, result,currentSum+j, k, n, j)
+            subList.removeAt(subList.size-1)
+        }
     }
 
 }
