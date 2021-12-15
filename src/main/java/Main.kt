@@ -531,12 +531,14 @@ object Main {
 
 //        print(countPrimes(10))
 
-        combinationSum3(2,18).forEach {
-            it.forEach { n ->
-                print("$n ")
-            }
-            println()
-        }
+//        combinationSum3(2,18).forEach {
+//            it.forEach { n ->
+//                print("$n ")
+//            }
+//            println()
+//        }
+
+        print(containsNearbyDuplicate(intArrayOf(1,2,3,1,2,3),2))
     }
 
 
@@ -4852,6 +4854,37 @@ object Main {
             backTraceCombinationSum3(subList, result,currentSum+j, k, n, j)
             subList.removeAt(subList.size-1)
         }
+    }
+
+    /**
+     * 219. 存在重复元素 II
+     * 1,2,3,1,2,3   2
+     */
+    fun containsNearbyDuplicate(nums: IntArray, k: Int): Boolean {
+        for (i in 0 until nums.size-1){
+            for (j in i+1 .. (nums.size-1).coerceAtMost(i+k)){
+                if (nums[i] == nums[j]) return true
+            }
+        }
+        return false
+    }
+
+    /**
+     * 219. 存在重复元素 II
+     * 滑动窗口
+     */
+    fun containsNearbyDuplicate2(nums: IntArray, k: Int): Boolean {
+        val set = HashSet<Int>(k+1)
+        for (i in nums.indices){
+            if (set.contains(nums[i])){
+                return true
+            }
+            set.add(nums[i])
+            if (set.size == k+1){
+                set.remove(nums[i-k])
+            }
+        }
+        return false
     }
 
 }
