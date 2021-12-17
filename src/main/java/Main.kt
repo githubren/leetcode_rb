@@ -538,7 +538,12 @@ object Main {
 //            println()
 //        }
 
-        print(containsNearbyDuplicate(intArrayOf(1,2,3,1,2,3),2))
+//        print(containsNearbyDuplicate(intArrayOf(1,2,3,1,2,3),2))
+//        print(containsNearbyAlmostDuplicate(intArrayOf(Int.MAX_VALUE,-1,Int.MAX_VALUE),1,Int.MAX_VALUE))
+
+        summaryRanges(intArrayOf(0,1,2,4,5,6,7)).forEach {
+            print("$it ")
+        }
     }
 
 
@@ -4885,6 +4890,69 @@ object Main {
             }
         }
         return false
+    }
+
+    /**
+     * 220. 存在重复元素 III
+     */
+//    fun containsNearbyAlmostDuplicate(nums: IntArray, k: Int, t: Int): Boolean {
+//        val set = HashSet<Long>(k+1)
+//        for (i in nums.indices){
+//            set.forEach {
+//                if (Math.abs((nums[i] - it).toLong()) <= t){
+//                    return true
+//                }
+//            }
+//            set.add(nums[i].toLong())
+//            if (set.size == k+1){
+//                set.remove(nums[i-k].toLong())
+//            }
+//        }
+//        return false
+//    }
+
+
+    /**
+     * 221. 最大正方形
+     */
+//    fun maximalSquare(matrix: Array<CharArray>): Int {
+//        val dp = Array(matrix.size){IntArray(matrix[0].size)}
+//        dp[0][0] = if (matrix[0][0] == '1') 1 else 0
+//        for (i in matrix.indices){
+//            for (j in matrix[i].indices){
+//                if (i == 0 && j == 0)continue
+//
+//            }
+//        }
+//    }
+
+    /**
+     * 228. 汇总区间
+     * 0,1,2,4,5,7
+     */
+    fun summaryRanges(nums: IntArray): List<String> {
+        if (nums.isEmpty()) return emptyList()
+        if (nums.size == 1) return arrayListOf("${nums[0]}")
+        val result = arrayListOf<String>()
+        var start = 0
+        var end = 1
+        while (end <= nums.size-1){
+            if (nums[end] != nums[end-1]+1){
+                if (end == start+1){
+                    result.add("${nums[start]}")
+                }else{
+                    result.add("${nums[start]}->${nums[end-1]}")
+                }
+                start = end
+            }
+            end++
+        }
+        if (start == nums.size-1){
+            result.add("${nums[start]}")
+        }else{
+            result.add("${nums[start]}->${nums[nums.size-1]}")
+        }
+        return result
     }
 
 }
