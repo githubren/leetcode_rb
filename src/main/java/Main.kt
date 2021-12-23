@@ -541,9 +541,11 @@ object Main {
 //        print(containsNearbyDuplicate(intArrayOf(1,2,3,1,2,3),2))
 //        print(containsNearbyAlmostDuplicate(intArrayOf(Int.MAX_VALUE,-1,Int.MAX_VALUE),1,Int.MAX_VALUE))
 
-        summaryRanges(intArrayOf(0,1,2,4,5,6,7)).forEach {
-            print("$it ")
-        }
+//        summaryRanges(intArrayOf(0,1,2,4,5,6,7)).forEach {
+//            print("$it ")
+//        }
+
+        print(majorityElement2(intArrayOf(3,2,3)))
     }
 
 
@@ -4951,6 +4953,45 @@ object Main {
             result.add("${nums[start]}")
         }else{
             result.add("${nums[start]}->${nums[nums.size-1]}")
+        }
+        return result
+    }
+
+//    /**
+//     * 91. 解码方法
+//     */
+//    fun numDecodings(s: String): Int {
+//        if (s[0] == '0') return 0
+//        for ()
+//    }
+
+    /**
+     * 229. 求众数 II
+     */
+    fun majorityElement2(nums: IntArray): List<Int> {
+        val result = arrayListOf<Int>()
+        val map = HashMap<Int,Int>()
+        val n = nums.size/3
+        if (nums.size == 1){
+            result.add(nums[0])
+            return result
+        }
+        if (nums.size == 2){
+            if (nums[0] == nums[1]){
+                result.add(nums[0])
+            }else{
+                result.add(nums[0])
+                result.add(nums[1])
+            }
+            return result
+        }
+        nums.forEach {
+            map[it] = map.getOrDefault(it,0)+1
+        }
+        map.keys.forEach {
+            if (map[it]!! > n){
+                result.add(it)
+            }
         }
         return result
     }
