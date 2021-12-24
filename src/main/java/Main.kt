@@ -545,7 +545,10 @@ object Main {
 //            print("$it ")
 //        }
 
-        print(majorityElement2(intArrayOf(3,2,3)))
+//        print(majorityElement2(intArrayOf(3,2,3)))
+        singleNumber3(intArrayOf(1,2,1,3,2,5)).forEach {
+            print("$it ")
+        }
     }
 
 
@@ -4991,6 +4994,25 @@ object Main {
         map.keys.forEach {
             if (map[it]!! > n){
                 result.add(it)
+            }
+        }
+        return result
+    }
+
+    /**
+     * 260. 只出现一次的数字 III
+     */
+    fun singleNumber3(nums: IntArray): IntArray {
+        if (nums.size == 2) return nums
+        var xorResult = 0
+        val result = IntArray(2)
+        for (i in nums.indices){
+            xorResult = xorResult.xor(nums[i])
+        }
+        for (j in nums.indices){
+            if (nums.contains(xorResult.xor(nums[j]))){
+                result[0] = nums[j]
+                result[1] = xorResult.xor(nums[j])
             }
         }
         return result
