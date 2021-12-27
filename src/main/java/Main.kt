@@ -546,9 +546,11 @@ object Main {
 //        }
 
 //        print(majorityElement2(intArrayOf(3,2,3)))
-        singleNumber3(intArrayOf(1,2,1,3,2,5)).forEach {
-            print("$it ")
-        }
+//        singleNumber3(intArrayOf(1,2,1,3,2,5)).forEach {
+//            print("$it ")
+//        }
+
+        print(missingNumber(intArrayOf(0)))
     }
 
 
@@ -5015,6 +5017,18 @@ object Main {
                 result[1] = xorResult.xor(nums[j])
             }
         }
+        return result
+    }
+
+    /**
+     * 268. 丢失的数字
+     */
+    fun missingNumber(nums: IntArray): Int {
+        var result = -1
+        for (i in nums.indices){
+            result = result.xor(i).xor(nums[i])
+        }
+        result = result.xor(nums.size).xor(-1)
         return result
     }
 
