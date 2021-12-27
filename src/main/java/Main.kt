@@ -550,7 +550,9 @@ object Main {
 //            print("$it ")
 //        }
 
-        print(missingNumber(intArrayOf(0)))
+//        print(missingNumber(intArrayOf(0)))
+
+        print(hIndex(intArrayOf(0,0,3)))
     }
 
 
@@ -5030,6 +5032,43 @@ object Main {
         }
         result = result.xor(nums.size).xor(-1)
         return result
+    }
+
+    /**
+     * 274. H 指数
+     * 0 1 3 5 6
+     */
+    fun hIndex(citations: IntArray): Int {
+        val sortArray = countSort(citations)
+        var h = 0
+        for (i in sortArray.indices){
+            if (sortArray[i] == 0) continue
+            h = h.coerceAtLeast(sortArray[i].coerceAtMost(sortArray.size-i))
+        }
+        return h
+    }
+
+    private fun countSort(nums: IntArray): IntArray{
+        var max = nums[0]
+        var min = nums[0]
+        for (i in nums.indices){
+            max = max.coerceAtLeast(nums[i])
+            min = min.coerceAtMost(nums[i])
+        }
+        val countArray = IntArray(max - min+1)
+        for (j in nums.indices){
+            countArray[nums[j]-min] += 1
+        }
+        val resultArray = IntArray(nums.size)
+        var index = 0
+        for (m in countArray.indices){
+            while (countArray[m] != 0){
+                resultArray[index] = m+min
+                countArray[m] -= 1
+                index++
+            }
+        }
+        return resultArray
     }
 
 }
