@@ -552,7 +552,9 @@ object Main {
 
 //        print(missingNumber(intArrayOf(0)))
 
-        print(hIndex(intArrayOf(0,0,3)))
+//        print(hIndex(intArrayOf(0,0,3)))
+
+        print(hIndex2(intArrayOf(1,1,1,1,3,3,4,4,5,6,7,7,8,9,10)))
     }
 
 
@@ -5069,6 +5071,33 @@ object Main {
             }
         }
         return resultArray
+    }
+
+    /**
+     * 275. H 指数 II
+     * 2 4 7 7 7   0 1 2 5 6
+     */
+    fun hIndex2(citations: IntArray): Int {
+        var left = 0
+        var right = citations.size-1
+        var result = 0
+        while (left <= right){
+            val mid = (left+right)/2
+            if (citations[mid] == 0){
+                left = mid+1
+                continue
+            }
+            var tm: Int
+            if (citations[mid] > citations.size-mid){
+                tm = citations.size-mid
+                right = mid-1
+            }else{
+                tm = citations[mid]
+                left = mid+1
+            }
+            result = result.coerceAtLeast(tm)
+        }
+        return result
     }
 
 }
