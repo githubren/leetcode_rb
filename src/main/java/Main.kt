@@ -556,7 +556,12 @@ object Main {
 
 //        print(hIndex2(intArrayOf(1,1,1,1,3,3,4,4,5,6,7,7,8,9,10)))
 
-        println(findDuplicate(intArrayOf(1,4,4,2,4)))
+//        println(findDuplicate(intArrayOf(1,4,4,2,4)))
+
+        gameOfLife(arrayOf(intArrayOf(0,1,0),
+                           intArrayOf(0,0,1),
+                           intArrayOf(1,1,1),
+                           intArrayOf(0,0,0)))
     }
 
 
@@ -5113,6 +5118,49 @@ object Main {
             }
         }
         return 0
+    }
+
+    /**
+     * 289. 生命游戏
+     * 0 1 0
+     * 0 0 1
+     * 1 1 1
+     * 0 0 0
+     */
+    fun gameOfLife(board: Array<IntArray>): Unit {
+        var liveCount = 0
+        a@ for (i in board.indices){
+            b@ for (j in board[i].indices){
+                c@ for (k in (i-1).coerceAtLeast(0) .. (i+1).coerceAtMost(board.size-1)){
+                    d@ for (m in (j-1).coerceAtLeast(0) .. (j+1).coerceAtMost(board[i].size-1)){
+                        if (liveCount > 3) break@c
+                        if (k == i && m == j) continue@d
+                        if (board[k][m] == 1 || board[k][m] == 2){
+                            liveCount+=1
+                            continue@d
+                        }
+                    }
+                }
+                when(board[i][j]){
+                    0 ->{//死细胞
+                        if (liveCount == 3) board[i][j] = 3
+                    }
+                    1 ->{//活细胞
+                        if (liveCount < 2 || liveCount > 3) board[i][j] = 2
+                    }
+                }
+                liveCount = 0
+            }
+        }
+        for (i in board.indices){
+            for (j in board[i].indices){
+                if (board[i][j] == 2) {
+                    board[i][j] = 0
+                }else if (board[i][j] == 3){
+                    board[i][j] = 1
+                }
+            }
+        }
     }
 
 }
