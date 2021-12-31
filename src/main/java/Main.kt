@@ -554,7 +554,9 @@ object Main {
 
 //        print(hIndex(intArrayOf(0,0,3)))
 
-        print(hIndex2(intArrayOf(1,1,1,1,3,3,4,4,5,6,7,7,8,9,10)))
+//        print(hIndex2(intArrayOf(1,1,1,1,3,3,4,4,5,6,7,7,8,9,10)))
+
+        println(findDuplicate(intArrayOf(1,4,4,2,4)))
     }
 
 
@@ -5098,6 +5100,19 @@ object Main {
             result = result.coerceAtLeast(tm)
         }
         return result
+    }
+
+    /**
+     * 287. 寻找重复数
+     * 1 4 4 2 4  10  15
+     */
+    fun findDuplicate(nums: IntArray): Int{
+        for (i in nums.indices){
+            for (j in i+1 until nums.size){
+                if (nums[i] == nums[j]) return nums[i]
+            }
+        }
+        return 0
     }
 
 }
