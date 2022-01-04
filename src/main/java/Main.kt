@@ -558,10 +558,12 @@ object Main {
 
 //        println(findDuplicate(intArrayOf(1,4,4,2,4)))
 
-        gameOfLife(arrayOf(intArrayOf(0,1,0),
-                           intArrayOf(0,0,1),
-                           intArrayOf(1,1,1),
-                           intArrayOf(0,0,0)))
+//        gameOfLife(arrayOf(intArrayOf(0,1,0),
+//                           intArrayOf(0,0,1),
+//                           intArrayOf(1,1,1),
+//                           intArrayOf(0,0,0)))
+
+        print(lengthOfLIS(intArrayOf(0,1,0,3,2,3)))
     }
 
 
@@ -5161,6 +5163,31 @@ object Main {
                 }
             }
         }
+    }
+
+    /**
+     * 300. 最长递增子序列
+     * 10,9,2,5,3,7,101,18
+     * 0,1,0,3,2,3
+     */
+    fun lengthOfLIS(nums: IntArray): Int {
+        val dp = IntArray(nums.size)
+        var maxLength = 1
+        dp[0] = 1
+        for (i in 1 until nums.size){
+             for (j in 0 until i){
+                 if (nums[i] > nums[j]){
+                     dp[i] = (dp[j]+1).coerceAtLeast(dp[i])
+                     maxLength = maxLength.coerceAtLeast(dp[i])
+                 }
+             }
+            dp[i] = dp[i].coerceAtLeast(1)
+        }
+        dp.forEach {
+            print("$it ")
+        }
+        println()
+        return maxLength
     }
 
 }
