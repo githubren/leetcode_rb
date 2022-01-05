@@ -5190,4 +5190,28 @@ object Main {
         return maxLength
     }
 
+    /**
+     * 303. 区域和检索 - 数组不可变
+     */
+    class NumArray(val nums: IntArray) {
+
+        private val sums = IntArray(nums.size)
+
+        init {
+            sums[0] = nums[0]
+            for (i in 1 until nums.size){
+                sums[i]  = sums[i-1]+nums[i]
+            }
+        }
+
+        fun sumRange(left: Int, right: Int): Int {
+            return if (left == 0){
+                sums[right]
+            }else{
+                sums[right] - sums[left-1]
+            }
+        }
+
+    }
+
 }
