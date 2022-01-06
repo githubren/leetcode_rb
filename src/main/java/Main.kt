@@ -563,7 +563,9 @@ object Main {
 //                           intArrayOf(1,1,1),
 //                           intArrayOf(0,0,0)))
 
-        print(lengthOfLIS(intArrayOf(0,1,0,3,2,3)))
+//        print(lengthOfLIS(intArrayOf(0,1,0,3,2,3)))
+
+        tmFun()
     }
 
 
@@ -5212,6 +5214,56 @@ object Main {
             }
         }
 
+    }
+
+    /**
+     * 304. 二维区域和检索 - 矩阵不可变
+     */
+    class NumMatrix(matrix: Array<IntArray>) {
+        private val sums = Array(matrix.size){IntArray(matrix[0].size)}
+
+        init {
+            sums[0][0] = matrix[0][0]
+            for (i in matrix.indices){
+                for (j in matrix[0].indices){
+                    if (i == 0 && j ==0)continue
+                    if (i == 0){
+                        sums[i][j] = sums[i][j-1]+matrix[i][j]
+                        continue
+                    }
+                    if (j == 0){
+                        sums[i][j] = sums[i-1][j]+matrix[i][j]
+                        continue
+                    }
+                    sums[i][j] = sums[i][j-1]+sums[i-1][j]+matrix[i][j]-sums[i-1][j-1]
+                }
+            }
+        }
+
+        fun sumRegion(row1: Int, col1: Int, row2: Int, col2: Int): Int {
+            sums.forEach {
+                it.forEach { n ->
+                    print("$n ")
+                }
+                println()
+            }
+            return when{
+                row1 > 0 && col1 > 0 -> sums[row2][col2]-sums[row2][col1-1]-sums[row1-1][col2]+sums[row1-1][col1-1]
+                row1 == 0 && col1 > 0 -> sums[row2][col2]-sums[row2][col1-1]
+                row1 > 0 && col1 == 0 -> sums[row2][col2]-sums[row1-1][col2]
+                else -> sums[row2][col2]
+            }
+        }
+    }
+
+    private fun tmFun(){
+        val matrix = NumMatrix(arrayOf(intArrayOf(3,0,1,4,2),
+                                       intArrayOf(5,6,3,2,1),
+                                       intArrayOf(1,2,0,1,5),
+                                       intArrayOf(4,1,0,1,7),
+                                       intArrayOf(1,0,3,0,5)))
+
+        println(matrix.sumRegion(2,1,4,3))
     }
 
 }
