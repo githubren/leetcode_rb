@@ -1387,10 +1387,45 @@ object Main {
     /**
      * 81. 搜索旋转排序数组 II
      * 2,5,6,0,0,1,2  0
+     * 5 6 7 7 1 2 2  1
      */
-//    fun search2(nums: IntArray, target: Int): Boolean {
-//
-//    }
+    fun search2(nums: IntArray, target: Int): Boolean {
+        when{
+            nums[0] < nums[nums.size-1] -> return binarySearch(nums, target)
+            nums[0] > nums[nums.size-1] ->{
+                var left = 0
+                var right = nums.size-1
+                while (left <= right){
+                    val mid = (left+right)/2
+                    when{
+                        nums[mid] > target ->{
+                            if (nums[mid] >= nums[left]){
+
+                            }
+                        }
+                    }
+                }
+            }
+            else ->{
+
+            }
+        }
+        return true
+    }
+
+    private fun binarySearch(nums: IntArray,target: Int): Boolean{
+        var left = 0
+        var right = nums.size-1
+        while (left <= right){
+            val mid = (left+right)/2
+            when{
+                nums[mid] > target -> right = mid-1
+                nums[mid] < target -> left = mid+1
+                else -> return true
+            }
+        }
+        return false
+    }
 
     /**
      * 34. 在排序数组中查找元素的第一个和最后一个位置
@@ -4982,7 +5017,7 @@ object Main {
 //     */
 //    fun numDecodings(s: String): Int {
 //        if (s[0] == '0') return 0
-//        for ()
+//
 //    }
 
     /**
@@ -5257,13 +5292,86 @@ object Main {
     }
 
     private fun tmFun(){
-        val matrix = NumMatrix(arrayOf(intArrayOf(3,0,1,4,2),
-                                       intArrayOf(5,6,3,2,1),
-                                       intArrayOf(1,2,0,1,5),
-                                       intArrayOf(4,1,0,1,7),
-                                       intArrayOf(1,0,3,0,5)))
+//        val matrix = NumMatrix(arrayOf(intArrayOf(3,0,1,4,2),
+//                                       intArrayOf(5,6,3,2,1),
+//                                       intArrayOf(1,2,0,1,5),
+//                                       intArrayOf(4,1,0,1,7),
+//                                       intArrayOf(1,0,3,0,5)))
+//
+//        println(matrix.sumRegion(2,1,4,3))
 
-        println(matrix.sumRegion(2,1,4,3))
+        val array = NumArray3(nums = intArrayOf(7,2,7,2,0))
+        array.update(4,6)
+        array.update(0,2)
+        array.update(0,9)
+        println(array.sumRange(4,4))
+        array.update(3,8)
+        println(array.sumRange(0,4))
+        array.update(4,1)
+        println(array.sumRange(0,3))
+        println(array.sumRange(0,4))
+
+    }
+
+    /**
+     * 179. 最大数
+     * 3,30,34,5,9
+     */
+    fun largestNumber(nums: IntArray): String {
+        val sb = StringBuilder()
+        val completionArray = IntArray(nums.size)
+        var maxLength = 0
+        nums.forEach {
+
+        }
+        return sb.toString()
+    }
+
+    /**
+     * 307. 区域和检索 - 数组可修改
+     */
+    class NumArray3(val nums: IntArray) {
+
+        private val sums = IntArray(nums.size)
+
+        init {
+            print("原始数组：")
+            nums.forEach {
+                print("$it ")
+            }
+            sums[0] = nums[0]
+            for (i in 1 until nums.size){
+                sums[i]  = sums[i-1]+nums[i]
+            }
+            println()
+            print("原始和数组：")
+            sums.forEach {
+                print("$it ")
+            }
+            println()
+        }
+
+        fun update(index: Int, `val`: Int) {
+            println("update:index->$index  `val`->$`val`")
+            for (i in index until nums.size){
+                sums[i] += `val`-nums[index]
+            }
+            nums[index] = `val`
+            sums.forEach {
+                print("$it ")
+            }
+            println()
+        }
+
+        fun sumRange(left: Int, right: Int): Int {
+            println("sumRange:left->$left   right->$right")
+            return if (left == 0){
+                sums[right]
+            }else{
+                sums[right] - sums[left-1]
+            }
+        }
+
     }
 
 }
