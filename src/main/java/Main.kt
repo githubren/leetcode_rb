@@ -565,7 +565,9 @@ object Main {
 
 //        print(lengthOfLIS(intArrayOf(0,1,0,3,2,3)))
 
-        tmFun()
+//        tmFun()
+
+        println(increasingTriplet(intArrayOf(20,20,10,5,4,3)))
     }
 
 
@@ -5300,17 +5302,56 @@ object Main {
 //
 //        println(matrix.sumRegion(2,1,4,3))
 
-        val array = NumArray3(nums = intArrayOf(7,2,7,2,0))
-        array.update(4,6)
-        array.update(0,2)
-        array.update(0,9)
-        println(array.sumRange(4,4))
-        array.update(3,8)
-        println(array.sumRange(0,4))
-        array.update(4,1)
-        println(array.sumRange(0,3))
-        println(array.sumRange(0,4))
+//        val array = NumArray3(nums = intArrayOf(7,2,7,2,0))
+//        array.update(4,6)
+//        array.update(0,2)
+//        array.update(0,9)
+//        println(array.sumRange(4,4))
+//        array.update(3,8)
+//        println(array.sumRange(0,4))
+//        array.update(4,1)
+//        println(array.sumRange(0,3))
+//        println(array.sumRange(0,4))
 
+        val a = 0x1b
+        val b = 0x0f
+        val a1 = a.toByte()
+        println(a)
+        println(a1)
+        println(a.shr(4))
+        val c = a.shr(4).and(b)
+        println(c)
+        val d = c+0x30
+        println(d)
+        println(0x01+0x30)
+
+        println("------------------------")
+
+        val e = 48
+        val f = 0x0f
+        val f1 = 15
+        val g = e.and(f)
+        val g1 = e.and(f1)
+        println("g:$g")
+        println("g1:$g1")
+        val h = g.shl(4)
+        println(h)
+
+        println("------------------------")
+
+        val i = 63
+        val j = i.and(f)
+        println(j)
+        val l = j.shl(4)
+        println(l)
+
+        val m = 257
+        println("Byte max:${Byte.MAX_VALUE}")
+        println("Byte min:${Byte.MIN_VALUE}")
+        println(m.toByte())
+
+
+        println(f.toByte())
     }
 
     /**
@@ -5319,11 +5360,19 @@ object Main {
      */
     fun largestNumber(nums: IntArray): String {
         val sb = StringBuilder()
-        val completionArray = IntArray(nums.size)
-        var maxLength = 0
-        nums.forEach {
-
-        }
+//        val sortList = arrayListOf<Int>()
+//        for (i in nums.indices){
+//            if (i == 0){
+//                sortList.add(nums[i])
+//                continue
+//            }
+//            when{
+//                nums[i].toString()[0] < sortList[i-1].toString()[0] -> sortList.add(nums[i])
+//                nums[i].toString()[0] > sortList[i-1].toString()[0] -> {
+//                    for (j in )
+//                }
+//            }
+//        }
         return sb.toString()
     }
 
@@ -5372,6 +5421,24 @@ object Main {
             }
         }
 
+    }
+
+    /**
+     * 334. 递增的三元子序列
+     * 20,100,10,12,5,13
+     */
+    fun increasingTriplet(nums: IntArray): Boolean {
+        if (nums.size < 3) return false
+        var iV = Int.MAX_VALUE
+        var jV = Int.MAX_VALUE
+        for (k in nums.indices){
+            when {
+                nums[k] <= iV -> iV = nums[k]
+                nums[k] <= jV -> jV = nums[k]
+                else -> return true
+            }
+        }
+        return false
     }
 
 }
