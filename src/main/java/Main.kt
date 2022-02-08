@@ -569,7 +569,9 @@ object Main {
 
 //        println(increasingTriplet(intArrayOf(20,20,10,5,4,3)))
 
-        println(mySqrt(2147395599))
+//        println(mySqrt(2147395599))
+
+        println(myPow(2.0, Int.MIN_VALUE))
     }
 
 
@@ -5462,6 +5464,29 @@ object Main {
             }
         }
         return if (left == right) left else result
+    }
+
+    /**
+     * 50. Pow(x, n)
+     * 2.0   10
+     */
+    fun myPow(x: Double, n: Int): Double {
+        if (n == 0) return 1.0
+        if (n == 1) return x
+        if (n == -1) return 1/x
+        return if (n < 0){
+            if (n%2 == 0) subTrackMyPow(1/x,n) else subTrackMyPow(1/x,n+1)*(1/x)
+        }else{
+            if (n%2 == 0) subTrackMyPow(x,n) else subTrackMyPow(x,n-1)*x
+        }
+    }
+
+    private fun subTrackMyPow(x: Double,n: Int): Double{
+        return when{
+            n > 1 -> if (n%2 == 0) subTrackMyPow(x*x,n/2) else subTrackMyPow(x*x,(n-1)/2)*x
+            n < -1 -> if (n%2 == 0) subTrackMyPow(x*x,n/2) else subTrackMyPow(x*x,(n+1)/2)*x
+            else -> x
+        }
     }
 
 }
