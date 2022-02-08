@@ -567,7 +567,9 @@ object Main {
 
 //        tmFun()
 
-        println(increasingTriplet(intArrayOf(20,20,10,5,4,3)))
+//        println(increasingTriplet(intArrayOf(20,20,10,5,4,3)))
+
+        println(mySqrt(2147395599))
     }
 
 
@@ -5439,6 +5441,27 @@ object Main {
             }
         }
         return false
+    }
+
+    /**
+     * 69. x 的平方根
+     */
+    fun mySqrt(x: Int): Int {
+        if (x == 1) return 1
+        var result = 0
+        var left = 0
+        var right = x
+        while (left < right){
+            if (left == right-1)return left
+            val mid = ((left+right)/2).toLong()
+            val midMul = mid*mid
+            when{
+                midMul > x -> right = mid.toInt()
+                midMul < x -> left = mid.toInt()
+                else -> return mid.toInt()
+            }
+        }
+        return if (left == right) left else result
     }
 
 }
