@@ -571,7 +571,9 @@ object Main {
 
 //        println(mySqrt(2147395599))
 
-        println(myPow(2.0, Int.MIN_VALUE))
+//        println(myPow(2.0, Int.MIN_VALUE))
+
+        println(search2(intArrayOf(1,0,1,1,1),0))
     }
 
 
@@ -1392,31 +1394,62 @@ object Main {
 
     /**
      * 81. 搜索旋转排序数组 II
-     * 2,5,6,0,0,1,2  0
+     * 2,5,6,0,0,1,2  3     1 0 1 1 1    0
      * 5 6 7 7 1 2 2  1
      */
     fun search2(nums: IntArray, target: Int): Boolean {
         when{
             nums[0] < nums[nums.size-1] -> return binarySearch(nums, target)
-            nums[0] > nums[nums.size-1] ->{
+            nums[0] >= nums[nums.size-1] ->{
                 var left = 0
                 var right = nums.size-1
                 while (left <= right){
                     val mid = (left+right)/2
                     when{
                         nums[mid] > target ->{
-                            if (nums[mid] >= nums[left]){
-
+                            when {
+                                nums[mid] > nums[left] -> { //左边肯定递增
+                                    when {
+                                        nums[left] > target -> left = mid+1
+                                        nums[left] < target -> right = mid-1
+                                        else -> return true
+                                    }
+                                }
+                                nums[mid] < nums[left] -> right = mid-1
+                                else -> {
+                                    for (i in left .. right){
+                                        if (nums[i] == target){
+                                            return true
+                                        }
+                                    }
+                                    return false
+                                }
                             }
                         }
+                        nums[mid] < target ->{
+                            if (nums[mid] > nums[left]){
+                                left = mid+1
+                            }else if (nums[mid] == nums[left]){
+                                for (i in left .. right){
+                                    if (nums[i] == target){
+                                        return true
+                                    }
+                                }
+                                return false
+                            } else{
+                                when {
+                                    nums[right] > target -> left = mid+1
+                                    nums[right] < target -> right = mid-1
+                                    else -> return true
+                                }
+                            }
+                        }
+                        else -> return true
                     }
                 }
             }
-            else ->{
-
-            }
         }
-        return true
+        return false
     }
 
     private fun binarySearch(nums: IntArray,target: Int): Boolean{
