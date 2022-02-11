@@ -573,7 +573,11 @@ object Main {
 
 //        println(myPow(2.0, Int.MIN_VALUE))
 
-        println(search2(intArrayOf(1,0,1,1,1),0))
+//        println(search2(intArrayOf(1,0,1,1,1),0))
+
+        restoreIpAddresses("25525511135").forEach {
+            print("$it ")
+        }
     }
 
 
@@ -3798,9 +3802,44 @@ object Main {
     /**
      * 92. 反转链表 II
      */
-//    fun reverseBetween(head: ListNode?, left: Int, right: Int): ListNode? {
-//
-//    }
+    fun reverseBetween(head: ListNode?, left: Int, right: Int): ListNode? {
+        var count = 0
+        var node = head
+        var isReverse = false
+        val stack = Stack<ListNode>()
+        var leftHead = ListNode(0)
+        leftHead.next = head
+        while (node != null){
+            count++
+            when {
+                count < left -> {
+                    leftHead = leftHead.next!!
+                }
+                count > right -> {
+                    if (!isReverse){
+                        while (stack.isNotEmpty()){
+                            leftHead.next = stack.pop()
+                            leftHead = leftHead.next!!
+                        }
+                        isReverse = true
+                    }
+                    leftHead.next = node
+                    leftHead = leftHead.next!!
+                }
+                else -> {
+                    stack.push(node)
+                }
+            }
+            node = node.next
+        }
+        if (!isReverse){
+            while (stack.isNotEmpty()){
+                leftHead.next = stack.pop()
+                leftHead.next?.next = null
+            }
+        }
+        return head
+    }
 
     /**
      * 704. 二分查找
@@ -5520,6 +5559,69 @@ object Main {
             n < -1 -> if (n%2 == 0) subTrackMyPow(x*x,n/2) else subTrackMyPow(x*x,(n+1)/2)*x
             else -> x
         }
+    }
+
+    /**
+     * 93. 复原 IP 地址
+     * 25525511135   255.255.11.135   255.255.111.35
+     */
+    fun restoreIpAddresses(s: String): List<String> {
+        val result = arrayListOf<String>()
+        backTrackRestoreIpAddresses(s,0,0,result)
+        return result
+    }
+
+    /**
+     * 回溯
+     * @param index 每一层级起始位置  每个“.”之后进入下一层级判断时起始点
+     * @param point “.”的数量  有效ip终止判断的条件  三个“.”的时候还有效记入result中 无效返回上一层做回溯
+     */
+    private fun backTrackRestoreIpAddresses(s: String, index: Int, point:Int, result: ArrayList<String>){
+        //边界条件
+        if (point == 3){
+            //判断当前index到s末尾是否满足有效ip的条件
+            if (isValidIp(s,index,s.length-1)){
+                result.add(s)
+            }
+            return
+        }
+        //记录当前层级的逗点数  回溯用
+        var newP = point
+        //记录当前层级的s  回溯用
+        val sb = StringBuilder()
+        for (i in index until s.length){
+            //每循环一次 清掉StringBuilder对象
+            sb.clear()
+            if (isValidIp(s,index,i)){
+                //加上逗点
+                sb.append(s.substring(0,i+1)).append(".").append(s.substring(i+1))
+                newP++
+                //原始字符串中增加了一个逗点  所以递归进入下一层级时index得加2
+                backTrackRestoreIpAddresses(sb.toString(),i+2,newP,result)
+                //回溯
+                newP--
+                sb.deleteCharAt(i+1)
+            }
+        }
+    }
+
+    /**
+     * 判断传入的ip子段是否有效
+     * 无效条件：
+     * 1、0开头并且不止0一个数
+     * 2、存在非数字符号
+     * 3、子段的数值大于255
+     */
+    private fun isValidIp(s: String,startIndex: Int,endIndex: Int): Boolean{
+        if (startIndex > endIndex) return false
+        if (s[startIndex] == '0' && startIndex != endIndex) return false
+        var tm = 0
+        for (i in startIndex .. endIndex){
+            if (s[i] < '0' || s[i] > '9') return false
+            tm = (tm*10).plus(s[i]-'0')
+            if (tm > 255) return false
+        }
+        return true
     }
 
 }
