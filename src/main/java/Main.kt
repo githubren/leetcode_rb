@@ -578,6 +578,8 @@ object Main {
         restoreIpAddresses("25525511135").forEach {
             print("$it ")
         }
+
+
     }
 
 
@@ -5622,6 +5624,38 @@ object Main {
             if (tm > 255) return false
         }
         return true
+    }
+
+    /**
+     * 95. 不同的二叉搜索树 II
+     * 二叉搜索树特性：
+     *      —— 根节点的值大于左子树上所有的值，小于右子树上所有的值；
+     *      —— 针对于左右子树也满足上述特性。
+     */
+    fun generateTrees(n: Int): List<TreeNode?> {
+
+        return backTrackGenerateTrees(0,n)
+    }
+
+    private fun backTrackGenerateTrees(start: Int,end: Int): ArrayList<TreeNode?>{
+        val result = arrayListOf<TreeNode?>()
+        if (start > end){
+            result.add(null)
+            return result
+        }
+        for (i in start .. end){
+            val subLeftTree = backTrackGenerateTrees(start,i-1)
+            val subRightTree = backTrackGenerateTrees(i+1,end)
+            subLeftTree.forEach { l ->
+                subRightTree.forEach { r ->
+                    val subHeadTree = TreeNode(i)
+                    subHeadTree.left = l
+                    subHeadTree.right = r
+                    result.add(subHeadTree)
+                }
+            }
+        }
+        return result
     }
 
 }
