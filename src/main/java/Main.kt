@@ -575,11 +575,13 @@ object Main {
 
 //        println(search2(intArrayOf(1,0,1,1,1),0))
 
-        restoreIpAddresses("25525511135").forEach {
-            print("$it ")
-        }
+//        restoreIpAddresses("25525511135").forEach {
+//            print("$it ")
+//        }
 
+//            println(numTrees(3))
 
+        println(isInterleave("a","","a"))
     }
 
 
@@ -5633,7 +5635,6 @@ object Main {
      *      —— 针对于左右子树也满足上述特性。
      */
     fun generateTrees(n: Int): List<TreeNode?> {
-
         return backTrackGenerateTrees(0,n)
     }
 
@@ -5643,6 +5644,7 @@ object Main {
             result.add(null)
             return result
         }
+        //自下向上的递归
         for (i in start .. end){
             val subLeftTree = backTrackGenerateTrees(start,i-1)
             val subRightTree = backTrackGenerateTrees(i+1,end)
@@ -5656,6 +5658,49 @@ object Main {
             }
         }
         return result
+    }
+
+    /**
+     * 96. 不同的二叉搜索树
+     */
+//    fun numTrees(n: Int): Int {
+//        return backTrackNumTrees(1,n)
+//    }
+//
+//    private fun backTrackNumTrees(start: Int,end: Int): Int{
+//        if (start > end){
+//            return 1
+//        }
+//        for (i in start .. end){
+//            return backTrackNumTrees(start,i-1) + backTrackNumTrees(i+1,end)
+//        }
+//        return 1
+//    }
+
+    /**
+     * 97. 交错字符串
+     */
+    fun isInterleave(s1: String, s2: String, s3: String): Boolean {
+        if (s3.length != s1.length+s2.length) return false
+        val l1 = s1.length
+        val l2 = s2.length
+        val dp = Array(l1+1){ BooleanArray(l2+1) }
+        dp[0][0] = true
+        //s2为“”的情况
+        for (i in 1 .. l1){
+            dp[i][0] = dp[i-1][0] && s1[i-1] == s3[i-1]
+        }
+        //s1为“”的情况
+        for (j in 1 .. l2){
+            dp[0][j] = dp[0][j-1] && s2[j-1] == s3[j-1]
+        }
+
+        for (m in 1 .. l1){
+            for (n in 1 .. l2){
+                dp[m][n] = (dp[m-1][n] && s1[m-1] == s3[m-1+n]) || (dp[m][n-1] && s2[n-1] == s3[n-1+m])
+            }
+        }
+        return dp[l1][l2]
     }
 
 }
