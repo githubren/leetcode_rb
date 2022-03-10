@@ -165,17 +165,17 @@ object Main {
 
         val tree1 = TreeNode(1)
         val tree2 = TreeNode(2)
-        val tree3 = TreeNode(2)
-        val tree4 = TreeNode(3)
-        val tree5 = TreeNode(4)
+        val tree3 = TreeNode(3)
+        val tree4 = TreeNode(4)
+        val tree5 = TreeNode(5)
         val tree6 = TreeNode(4)
         val tree7 = TreeNode(3)
         tree1.left = tree2
         tree1.right = tree3
         tree2.left = tree4
-        tree2.right = tree5
-        tree3.left = tree6
-        tree3.right = tree7
+        tree3.right = tree5
+//        tree3.left = tree6
+//        tree3.right = tree7
 //        println(maxDepth(tree1))
 
 //        println(isValidBST(tree1))
@@ -581,7 +581,16 @@ object Main {
 
 //            println(numTrees(3))
 
-        println(isInterleave("a","","a"))
+//        println(isInterleave("a","","a"))
+
+//        recoverTree(TreeNode(0))
+
+        zigzagLevelOrder(tree1).forEach {
+            it.forEach { num ->
+                print("$num ")
+            }
+            println()
+        }
     }
 
 
@@ -5701,6 +5710,85 @@ object Main {
             }
         }
         return dp[l1][l2]
+    }
+
+    /**
+     * 99. 恢复二叉搜索树
+     */
+    fun recoverTree(root: TreeNode?): Unit {
+        val root1 = TreeNode(1)
+        val node1 = TreeNode(3)
+        val node2 = TreeNode(2)
+        root1.left = node1
+        root1.right = null
+        node1.left = null
+        node1.right = node2
+        val middleOrderResult = middleOrder4Tree(root1)
+        middleOrderResult.forEach {
+            print("$it ")
+        }
+    }
+
+    fun middleOrder4Tree(root: TreeNode?): List<Int?>{
+        val result = arrayListOf<Int?>()
+        if (root == null){
+            result.add(null)
+        }else{
+            result.add(root.`val`)
+            result.addAll(middleOrder4Tree(root.left))
+            result.addAll(middleOrder4Tree(root.right))
+        }
+        return result
+    }
+
+    private fun dfsRecoverTree(head: TreeNode?,){
+
+    }
+
+    /**
+     * 103. 二叉树的锯齿形层序遍历
+     */
+    fun zigzagLevelOrder(root: TreeNode?): List<List<Int>> {
+        if (root == null) return emptyList()
+        val result = ArrayList<ArrayList<Int>>()
+        val subList = ArrayList<Int>()
+        val queue = LinkedBlockingQueue<TreeNode?>()
+        var levelCount = 0
+        var levelIndex = 0
+        queue.put(root)
+        levelCount = queue.size
+        while (queue.isNotEmpty()){
+            if (levelCount != 0){
+                levelCount--
+                val node = queue.poll()
+                if (node != null){
+                    subList.add(node.`val`)
+                }
+                if (node?.left != null){
+                    queue.put(node.left)
+                }
+                if (node?.right != null){
+                    queue.put(node.right)
+                }
+            }else{
+                levelCount = queue.size
+                levelIndex++
+                val tmList = ArrayList<Int>()
+                tmList.addAll(subList)
+                if (levelIndex%2 == 0){
+                    tmList.reverse()
+                }
+                result.add(tmList)
+                subList.clear()
+            }
+        }
+        if (subList.size != 0){
+            if (levelIndex%2 == 0){
+                subList.reverse()
+            }
+            result.add(subList)
+        }
+        return result
     }
 
 }
