@@ -585,7 +585,14 @@ object Main {
 
 //        recoverTree(TreeNode(0))
 
-        zigzagLevelOrder(tree1).forEach {
+//        zigzagLevelOrder(tree1).forEach {
+//            it.forEach { num ->
+//                print("$num ")
+//            }
+//            println()
+//        }
+
+        levelOrderBottom(tree1).forEach {
             it.forEach { num ->
                 print("$num ")
             }
@@ -5787,6 +5794,36 @@ object Main {
                 subList.reverse()
             }
             result.add(subList)
+        }
+        return result
+    }
+
+    /**
+     * 107. 二叉树的层序遍历 II
+     */
+    fun levelOrderBottom(root: TreeNode?): List<List<Int>> {
+        if (root == null) return emptyList()
+        val result = ArrayList<ArrayList<Int>>()
+        val subList = ArrayList<Int>()
+        val queue = LinkedBlockingQueue<TreeNode>()
+        queue.put(root)
+        while (queue.isNotEmpty()){
+            var levelCount = queue.size
+            while (levelCount > 0){
+                levelCount--
+                val node = queue.poll()
+                subList.add(node.`val`)
+                if (node?.left != null){
+                    queue.put(node.left)
+                }
+                if (node?.right != null){
+                    queue.put(node.right)
+                }
+            }
+            val tm = ArrayList<Int>()
+            tm.addAll(subList)
+            subList.clear()
+            result.add(0,tm)
         }
         return result
     }
