@@ -322,18 +322,18 @@ object Main {
 
 //        println(lengthOfLongestSubstring2("ckilbkd"))
 
-        val node1 = ListNode(1)
-        val node2 = ListNode(2)
-        val node3 = ListNode(3)
-        val node4 = ListNode(4)
-        val node5 = ListNode(5)
+        val node1 = ListNode(-10)
+        val node2 = ListNode(-3)
+        val node3 = ListNode(0)
+        val node4 = ListNode(5)
+        val node5 = ListNode(9)
         val node6 = ListNode(2)
         val node7 = ListNode(5)
         val node8 = ListNode(5)
         node1.next = node2
-//        node2.next = node3
-//        node3.next = node4
-//        node4.next = node5
+        node2.next = node3
+        node3.next = node4
+        node4.next = node5
 //        node5.next = node6
 //        node6.next = node7
 //        node7.next = node8
@@ -592,12 +592,17 @@ object Main {
 //            println()
 //        }
 
-        levelOrderBottom(tree1).forEach {
-            it.forEach { num ->
-                print("$num ")
-            }
-            println()
-        }
+//        levelOrderBottom(tree1).forEach {
+//            it.forEach { num ->
+//                print("$num ")
+//            }
+//            println()
+//        }
+
+        var result = sortedListToBST2(node1)
+//        while (result != null){
+//            print(result.`val`)
+//        }
     }
 
 
@@ -5826,6 +5831,60 @@ object Main {
             result.add(0,tm)
         }
         return result
+    }
+
+    /**
+     * 109. 有序链表转换二叉搜索树
+     * 方法一：先转换成数组便于确定中间位置，确定中间位置得到头节点，再遍历确定左右子树
+     */
+    fun sortedListToBST(head: ListNode?): TreeNode? {
+        if (head == null) return null
+        var node = head
+        val nodeList = arrayListOf<Int?>()
+        while (node != null){
+            nodeList.add(node.n)
+            node = node.next
+        }
+        return recursionSortedListToBST(nodeList,0,nodeList.size-1)
+    }
+
+    private fun recursionSortedListToBST(nodeList: ArrayList<Int?>,start: Int,end: Int): TreeNode?{
+        val midIndex = (start+end)/2
+        val midValue = nodeList[midIndex]
+        val head = if (midValue != null) TreeNode(midValue) else null
+        if (midIndex > 0 && midIndex-1 >= start){
+            head?.left = recursionSortedListToBST(nodeList,start,midIndex-1)
+        }
+        if (midIndex < nodeList.size-1 && midIndex+1 <= end){
+            head?.right = recursionSortedListToBST(nodeList,midIndex+1,end)
+        }
+        return head
+    }
+
+    /**
+     * 109. 有序链表转换二叉搜索树
+     * 方法二：链表中可以用快慢指针的方法确定中间位置（快指针每次走2步，慢指针走1步，这样当快指针走到终点时，慢指针在链表中间），
+     * 确定中间位置得到头节点，再遍历确定左右子树
+     */
+    fun sortedListToBST2(head: ListNode?): TreeNode? {
+        if (head == null) return null
+        var fast = head
+        val newHead = head
+        var slow = head
+        var pre = newHead
+        while (fast?.next != null){
+            fast = fast.next?.next
+            pre = slow
+            slow = slow?.next
+        }
+        if (fast == slow) return TreeNode(head.n!!)
+        val headTree = if (slow != null) TreeNode(slow.n!!) else null
+        if (headTree != null){
+            headTree.right = sortedListToBST2(slow?.next)
+            pre?.next = null
+            headTree.left = sortedListToBST2(newHead)
+        }
+        return headTree
     }
 
 }
