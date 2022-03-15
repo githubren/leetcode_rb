@@ -5887,4 +5887,23 @@ object Main {
         return headTree
     }
 
+    /**
+     * 110. 平衡二叉树
+     */
+    fun isBalanced(root: TreeNode?): Boolean {
+        if (root == null) return true
+        val leftHeight = dfsIsBalanced(root.left)
+        val rightHeight = dfsIsBalanced(root.right)
+        return if (Math.abs(leftHeight - rightHeight) > 1) false
+        else isBalanced(root.left) && isBalanced(root.right)//因为取得最大高度 当前结点自由子树高度满足平衡二叉树时 子树不一定满足 所以传到下一层继续判断
+    }
+
+    /**
+     * 深度有限搜索找出子树最大高度
+     */
+    private fun dfsIsBalanced(root: TreeNode?): Int{
+        if (root == null) return 0
+        return dfsIsBalanced(root.left).coerceAtLeast(dfsIsBalanced(root.right))+1
+    }
+
 }
