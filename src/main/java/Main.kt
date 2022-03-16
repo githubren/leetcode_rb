@@ -168,12 +168,13 @@ object Main {
         val tree3 = TreeNode(3)
         val tree4 = TreeNode(4)
         val tree5 = TreeNode(5)
-        val tree6 = TreeNode(4)
+        val tree6 = TreeNode(6)
         val tree7 = TreeNode(3)
         tree1.left = tree2
         tree1.right = tree3
         tree2.left = tree4
         tree3.right = tree5
+        tree5.right = tree6
 //        tree3.left = tree6
 //        tree3.right = tree7
 //        println(maxDepth(tree1))
@@ -599,10 +600,12 @@ object Main {
 //            println()
 //        }
 
-        var result = sortedListToBST2(node1)
+//        var result = sortedListToBST2(node1)
 //        while (result != null){
 //            print(result.`val`)
 //        }
+
+        minDepth(tree1)
     }
 
 
@@ -5904,6 +5907,17 @@ object Main {
     private fun dfsIsBalanced(root: TreeNode?): Int{
         if (root == null) return 0
         return dfsIsBalanced(root.left).coerceAtLeast(dfsIsBalanced(root.right))+1
+    }
+
+    /**
+     * 111. 二叉树的最小深度
+     */
+    fun minDepth(root: TreeNode?): Int {
+        if (root == null) return 0
+        if (root.left == null && root.right == null) return 1
+        if (root.left == null && root.right != null) return minDepth(root.right)+1
+        if (root.left != null && root.right == null) return minDepth(root.left)+1
+        return minDepth(root.left).coerceAtMost(minDepth(root.right))+1
     }
 
 }
