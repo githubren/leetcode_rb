@@ -5920,4 +5920,44 @@ object Main {
         return minDepth(root.left).coerceAtMost(minDepth(root.right))+1
     }
 
+    /**
+     * 113. 路径总和 II
+     */
+    fun pathSum(root: TreeNode?, targetSum: Int): List<List<Int>> {
+        if (root == null) return emptyList()
+        val result = arrayListOf<ArrayList<Int>>()
+        val subList = arrayListOf<Int>()
+        dfsPathSum(root, targetSum, subList, result)
+        return result
+    }
+
+    /**
+     * 深度优先搜索
+     * @param root 到达当前层的节点
+     * @param targetSum 到达当前层时的目标值  上一层的目标值减去上一层节点值
+     * @param subList 到达当前层时的子集  包含路径上符合条件的节点值
+     * @param result 作为输出的结果集
+     */
+    private fun dfsPathSum(root: TreeNode?,targetSum: Int,subList: ArrayList<Int>,result: ArrayList<ArrayList<Int>>){
+        if (root == null) return
+        if (targetSum == root.`val` && root.left == null && root.right == null){
+            subList.add(root.`val`)
+            val tm = arrayListOf<Int>()
+            tm.addAll(subList)
+            //这个分支执行完返回上一层时需要把子集中当前的节点值删除
+            if (subList.size > 1){
+                subList.removeAt(subList.size-1)
+            }
+            result.add(tm)
+        }else {
+            subList.add(root.`val`)
+            dfsPathSum(root.left,targetSum-root.`val`,subList, result)
+            dfsPathSum(root.right,targetSum-root.`val`,subList, result)
+            //返回上一层时删除子集中当前节点值
+            if (subList.size > 1){
+                subList.removeAt(subList.size-1)
+            }
+        }
+    }
+
 }
