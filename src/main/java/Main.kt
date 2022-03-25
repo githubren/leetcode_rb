@@ -5971,4 +5971,31 @@ object Main {
         return isSameTree(p?.left,q?.left) && isSameTree(p?.right,q?.right)
     }
 
+    /**
+     * 114. 二叉树展开为链表
+     */
+    fun flatten(root: TreeNode?): Unit {
+        if (root == null) return
+        val stack = Stack<TreeNode>()
+        stack.push(root)
+        dfsForFillStack(root.left,stack)
+        dfsForFillStack(root.right,stack)
+        var tailNode = stack.pop()
+        while (!stack.isEmpty()){
+            val tm = stack.pop()
+            tm.left = null
+            tm.right = tailNode
+            tailNode = tm
+        }
+        root.right = tailNode.right
+    }
+
+    private fun dfsForFillStack(root: TreeNode?,stack: Stack<TreeNode>){
+        if (root == null) return
+        stack.push(root)
+        dfsForFillStack(root.left,stack)
+        dfsForFillStack(root.right,stack)
+    }
+
+
 }
