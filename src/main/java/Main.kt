@@ -8,6 +8,7 @@ import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 object Main {
@@ -605,7 +606,26 @@ object Main {
 //            print(result.`val`)
 //        }
 
-        minDepth(tree1)
+//        minDepth(tree1)
+
+
+//        print(numDistinct("babgbag","bag"))
+
+        val n1 = Node(1)
+        val n2 = Node(2)
+        val n3 = Node(3)
+        val n4 = Node(4)
+        val n5 = Node(5)
+        val n6 = Node(6)
+        val n7 = Node(7)
+
+        n1.left = n2
+        n1.right = n3
+        n2.left = n4
+        n2.right = n5
+        n3.left = n6
+        n3.right = n7
+        connect(n1)
     }
 
 
@@ -5997,5 +6017,50 @@ object Main {
         dfsForFillStack(root.right,stack)
     }
 
+    /**
+     * 115. 不同的子序列
+     */
+    fun numDistinct(s: String, t: String): Int {
+        val result = arrayListOf<ArrayList<String>>()
+        backtraceNumDistinct(s,0, arrayListOf(),result)
+        var count = 0
+        result.forEach { arr ->
+            val sb = StringBuilder()
+            arr.forEach {
+                sb.append(it)
+            }
+            if (sb.toString() == t){
+                count+=1
+            }
 
+        }
+        return count
+    }
+
+    private fun backtraceNumDistinct(s: String,index: Int,subList: ArrayList<String>,result: ArrayList<ArrayList<String>>){
+        result.add(ArrayList(subList))
+        for (i in index until s.length){
+            subList.add(s[i].toString())
+            backtraceNumDistinct(s, i+1, subList, result)
+            subList.removeAt(subList.size-1)
+        }
+    }
+
+    class Node(var `val`: Int){
+        var left: Node? = null
+        var right: Node? = null
+        var next: Node? = null
+    }
+
+    /**
+     * 116. 填充每个节点的下一个右侧节点指针
+     */
+    fun connect(root: Node?): Node? {
+        if (root?.left == null) return root
+        root.left?.next = root.right
+        root.right?.next = root.next?.left
+        connect(root.left)
+        connect(root.right)
+        return root
+    }
 }
