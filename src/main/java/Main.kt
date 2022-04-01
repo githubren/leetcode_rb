@@ -623,9 +623,9 @@ object Main {
         n1.right = n3
         n2.left = n4
         n2.right = n5
-        n3.left = n6
+//        n3.left = n6
         n3.right = n7
-        connect(n1)
+        connect2(n1)
     }
 
 
@@ -6062,5 +6062,50 @@ object Main {
         connect(root.left)
         connect(root.right)
         return root
+    }
+
+    /**
+     * 117. 填充每个节点的下一个右侧节点指针 II
+     */
+    fun connect2(root: Node?): Node? {
+        if (root == null) return null
+        reverseConnect2(root,null)
+        //上一个递归只处理了root节点，处理完之后进入root.left和root.right节点
+        connect2(root.left)
+        connect2(root.right)
+        return root
+    }
+
+    /**
+     * 递归进入处理下一节点
+     * @param root 下一层级的节点 可能是树的下一层的节点 可能是同一层的next指向的节点 可能是null
+     * @param lastNode 记录上一层级next相连的末尾节点 可能是某个节点的左子树 可能是某个节点的右子树 可能是null
+     */
+    private fun reverseConnect2(root: Node?,lastNode: Node?){
+        if (root == null) return
+        if (root.left != null){
+            //当前层级左子树不为null时，更新上一层级next相连的末尾节点到左子树
+            lastNode?.next = root.left
+            if (root.right != null){
+                //右子树也不为null时，更新next相连的末尾节点
+                root.left?.next = root.right
+                //左右子树处理完了，root.next节点递归进入下一层级处理，此时next相连的末尾节点是root.right
+                reverseConnect2(root.next,root.right)
+            }else{
+                //右子树为null，直接进入下一层级(root.next)处理，此时next相连的末尾节点是root.left
+                reverseConnect2(root.next,root.left)
+            }
+        }else{
+            if (root.right != null){
+                //当前层级左子树为null并且右子树不为null时，更新上一层级next相连的末尾节点(lastNode)到右子树
+                lastNode?.next = root.right
+                //左右子树处理完毕，进入下一层级此时next相连的末尾节点是root.right
+                reverseConnect2(root.next,root.right)
+            }else{
+                //当前层级左右子树都为null，进入下一层级，lastNode未更新
+                reverseConnect2(root.next,lastNode)
+            }
+        }
+
     }
 }
