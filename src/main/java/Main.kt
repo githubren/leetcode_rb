@@ -165,17 +165,17 @@ object Main {
 //        println(hasCycle(head))
 
         val tree1 = TreeNode(1)
-        val tree2 = TreeNode(2)
-        val tree3 = TreeNode(3)
-        val tree4 = TreeNode(4)
-        val tree5 = TreeNode(5)
+        val tree2 = TreeNode(0)
+        val tree3 = TreeNode(0)
+        val tree4 = TreeNode(5)
+        val tree5 = TreeNode(1)
         val tree6 = TreeNode(6)
         val tree7 = TreeNode(3)
         tree1.left = tree2
-        tree1.right = tree3
-        tree2.left = tree4
-        tree3.right = tree5
-        tree5.right = tree6
+//        tree1.right = tree3
+//        tree2.left = tree4
+//        tree2.right = tree5
+//        tree5.right = tree6
 //        tree3.left = tree6
 //        tree3.right = tree7
 //        println(maxDepth(tree1))
@@ -625,7 +625,9 @@ object Main {
         n2.right = n5
 //        n3.left = n6
         n3.right = n7
-        connect2(n1)
+//        connect2(n1)
+
+        println(sumNumbers2(tree1))
     }
 
 
@@ -6107,5 +6109,43 @@ object Main {
             }
         }
 
+    }
+
+    /**
+     * 129. 求根节点到叶节点数字之和
+     */
+    fun sumNumbers(root: TreeNode?): Int {
+        val strList = arrayListOf<String>()
+        backTraceSumNumbers(root,StringBuilder(),strList)
+        var result = "0"
+        strList.forEach {
+            result = addStrings(result,it)
+        }
+        return result.toInt()
+    }
+
+    private fun backTraceSumNumbers(root: TreeNode?,str: StringBuilder,strList: ArrayList<String>){
+        if (root == null) return
+        if (root.left == null && root.right == null){
+            val s = str.append(root.`val`)
+            strList.add(s.toString())
+            str.deleteCharAt(str.length-1)
+            return
+        }
+        backTraceSumNumbers(root.left,str.append(root.`val`),strList)
+        str.deleteCharAt(str.length-1)
+        backTraceSumNumbers(root.right,str.append(root.`val`),strList)
+        str.deleteCharAt(str.length-1)
+     }
+
+    fun sumNumbers2(root: TreeNode?): Int {
+        return reverseSumNumbers(0,root)
+    }
+
+    private fun reverseSumNumbers(result: Int,root: TreeNode?): Int{
+        if (root == null) return 0
+        val tm = result*10+root.`val`
+        if (root.left == null && root.right == null) return tm
+        return reverseSumNumbers(tm,root.left)+reverseSumNumbers(tm,root.right)
     }
 }
