@@ -627,7 +627,11 @@ object Main {
         n3.right = n7
 //        connect2(n1)
 
-        println(sumNumbers2(tree1))
+//        println(sumNumbers2(tree1))
+
+        sortArray(intArrayOf(-1,2,-8,-10)).forEach {
+            print("$it ")
+        }
     }
 
 
@@ -6147,5 +6151,73 @@ object Main {
         val tm = result*10+root.`val`
         if (root.left == null && root.right == null) return tm
         return reverseSumNumbers(tm,root.left)+reverseSumNumbers(tm,root.right)
+    }
+
+    /**
+     * 912. 排序数组
+     * 基数数排序
+     * 73,22,93,43,55,14,28,65,39,181
+     */
+    fun sortArray(nums: IntArray): IntArray {
+        val bucket = Array(21){IntArray(nums.size)}//一个二维数组 一维大小为21  前10个桶存放9-0的负数 第11个桶到第20个桶存放0-9的正数 最后一个桶存放每次分装好后再规整的数
+        val counts = IntArray(21)//记录每个桶中每次分装后桶中的个数  分装的次数根据待排序元素中最大长度而定
+        var maxLength = 0 //记录数组中元素的最大长度
+        var index = 0 //每次按桶分好组后往数组中装填时小于0的索引
+        /*
+         * 第一次遍历找出最大的长度 maxLength 这个将决定我们需要几次遍历来完成整个排序
+         * bucket多定义一排 将bucket的最后一排来存放每次分装后的元素
+         */
+        for (i in nums.indices){
+            maxLength = maxLength.coerceAtLeast(if (nums[i] >= 0) nums[i].toString().length else nums[i].toString().length-1)
+            bucket.last()[i] = nums[i]
+        }
+        //外层遍历 每次遍历取不同位的数字去分装到指定桶
+        for (i in 0 until maxLength){
+            //内层遍历 需要排序的每个数
+            for (j in bucket.last().indices){
+                //此次要比较的位数大于数字长度时 直接将其放到bucket的第一行里面去 例如：我要排百位的数字 但这个数只有两位时 直接将这个两位数放到bucket的第一行去
+                if ((if (bucket.last()[j] < 0) bucket.last()[j].toString().length-1 else bucket.last()[j].toString().length) < i+1){
+                    if (bucket.last()[j] < 0){
+                        bucket[9][counts[9]] = bucket.last()[j]
+                        //更新其计数器
+                        counts[9]+=1
+                    }else{
+                        bucket[10][counts[10]] = bucket.last()[j]
+                        //更新其计数器
+                        counts[10]+=1
+                    }
+                }else{//将要比较的位能取到具体值（不发生数组越界时） 根据其数字0到9之间的一个 将其放到对应的0-9的桶中
+                    val tmIndex = bucket.last()[j].toString().length - i - 1
+                    val numBit = bucket.last()[j].toString()[tmIndex]-'0'
+                    if (bucket.last()[j] < 0){
+                        bucket[9-numBit][counts[9-numBit]] = bucket.last()[j]
+                        //更新对应的计数器
+                        counts[9-numBit]+=1
+                    }else{
+                        bucket[10+numBit][counts[10+numBit]] = bucket.last()[j]
+                        //更新对应的计数器
+                        counts[10+numBit]+=1
+                    }
+                }
+            }
+            //初始装填的指针
+            index = 0
+            //将每个桶中的数字根据其计数器规整到一个桶中  计数器的作用就是此次分装每个桶中更新了几个数字在这就只装填几个 因为每个桶用完没有去清除桶里的数据
+            for (m in counts.indices){
+                for (n in 0 until counts[m]){
+                    bucket.last()[index] = bucket[m][n]
+                    index++
+                }
+                counts[m] = 0
+            }
+            bucket.forEach {
+                it.forEach { num ->
+                    print("$num ")
+                }
+                println()
+            }
+            println("----------------------")
+        }
+        return bucket.last()
     }
 }
