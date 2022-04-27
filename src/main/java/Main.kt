@@ -10,6 +10,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlin.random.Random
 
 object Main {
 
@@ -629,9 +630,20 @@ object Main {
 
 //        println(sumNumbers2(tree1))
 
-        sortArray(intArrayOf(-1,2,-8,-10)).forEach {
-            print("$it ")
-        }
+//        sortArray(intArrayOf(-1,2,-8,-10)).forEach {
+//            print("$it ")
+//        }
+
+//        randPoint()
+
+        println(isRectangleCover(arrayOf(intArrayOf(1,1,3,3), intArrayOf(3,1,4,2), intArrayOf(1,3,2,4), intArrayOf(2,2,4,4))))
+        println(isRectangleCover(arrayOf(intArrayOf(1,1,2,3), intArrayOf(1,3,2,4), intArrayOf(3,1,4,2), intArrayOf(3,2,4,4))))
+        println(isRectangleCover(arrayOf(intArrayOf(1,1,3,3), intArrayOf(3,1,4,2), intArrayOf(3,2,4,4), intArrayOf(1,3,2,4), intArrayOf(2,3,3,4))))
+        println(isRectangleCover(arrayOf(intArrayOf(0,0,1,1), intArrayOf(0,1,1,2), intArrayOf(0,2,1,3), intArrayOf(1,0,2,1),intArrayOf(1,0,2,1),
+            intArrayOf(1,2,2,3),
+            intArrayOf(2,0,3,1),
+            intArrayOf(2,1,3,2),
+            intArrayOf(2,2,3,3))))
     }
 
 
@@ -6219,5 +6231,102 @@ object Main {
             println("----------------------")
         }
         return bucket.last()
+    }
+    fun randPoint(): DoubleArray {
+//        val a = getRandom(x_center-radius,x_center+radius)
+//        val b = getRandom(y_center-radius,y_center+radius)
+//        return if(a*a+b*b <= radius*radius) doubleArrayOf(a,b) else randPoint()
+        for (i in 0 until 10){
+            println(Math.random()*3)
+        }
+        return doubleArrayOf()
+    }
+
+    private fun getRandom(min: Double,max: Double): Double{
+        val random = Random.Default
+        random.nextInt()
+        return random.nextDouble(max)%(max-min+1)+min
+    }
+
+    /**
+     * 391. 完美矩形
+     * 顶点和面积两个维度出发去判断
+     * 不满足条件：
+     * 1、拼接后的图形面积不等于子矩形面积之和一定不是完美矩形；
+     * 2、拼接后的图形顶点数不是四个一定不是完美矩形；
+     * 3、理论顶点和实际顶点对应不上的一定不是完美矩形
+     * 理论顶点：完美矩形的左下顶点一定是数组中X、Y坐标值最小的点，同理完美矩形的右上顶点一定是数组中X、Y坐标值最大的点
+     * 实际顶点：出现次数为奇数次的点视为顶点，出现次数为偶数次的相互抵掉成为一条边（注意小矩形重合这个例外）
+     */
+    fun isRectangleCover(rectangles: Array<IntArray>): Boolean {
+        //实际顶点集
+        val vertexArray = arrayListOf<IntArray>()
+        //子矩形面积之和
+        var subS = 0
+        //理论左下顶点 取集合中X、Y坐标值最小的点 所以初始值设为Int.MAX_VALUE
+        val lb = IntArray(2){Int.MAX_VALUE}
+        //理论右上顶点 取集合中X、Y坐标值最大的点 所以初始值设为Int.MIN_VALUE
+        val rt = IntArray(2){Int.MIN_VALUE}
+        //理论左上顶点，坐标值由理论左下和右上坐标确定
+        val lt = IntArray(2)
+        //理论右下顶点，坐标值由理论左下和右上坐标确定
+        val rb = IntArray(2)
+        //遍历初始数组  1、找到所有的实际顶点  2、计算子矩形面积之和  3、找到理论左下和右上坐标
+        rectangles.forEach {
+            val p1 = intArrayOf(it[0],it[1])
+            val p2 = intArrayOf(it[2],it[3])
+            val p3 = intArrayOf(it[0],it[3])
+            val p4 = intArrayOf(it[2],it[1])
+
+            val tmArray = arrayListOf(p1,p2,p3,p4)
+            //1、找到所有的实际顶点
+            tmArray.forEach { p ->
+                val indexArray = arrayListOf<Int>()
+                //由于数组在遍历时不能对其进行增删操作 所以第一遍遍历标记要删除的index
+                for (i in vertexArray.indices){
+                    if (vertexArray[i][0] == p[0] && vertexArray[i][1] == p[1]){
+                        indexArray.add(i)
+                    }
+                }
+                //当前顶点坐标值在vertexArray中已存在那么闪掉vertexArray这个点 没有就加上这个点
+                if (indexArray.isEmpty()){
+                    vertexArray.add(p)
+                }else{
+                    indexArray.forEach { index ->
+                        vertexArray.removeAt(index)
+                    }
+                }
+            }
+            //2、计算子矩形面积之和
+            subS+=(it[3]-it[1])*(it[2]-it[0])
+            //3、找到理论左下和右上坐标
+            lb[0] = lb[0].coerceAtMost(it[0])
+            lb[1] = lb[1].coerceAtMost(it[1])
+            rt[0] = rt[0].coerceAtLeast(it[2])
+            rt[1] = rt[1].coerceAtLeast(it[3])
+        }
+        val theoryW = rt[1]-lb[1]
+        val theoryL = rt[0]-lb[0]
+        val theoryS = theoryL*theoryW
+        //1、拼接后的图形面积不等于子矩形面积之和一定不是完美矩形；
+        if (theoryS != subS) return false
+        //2、拼接后的图形顶点数不是四个一定不是完美矩形；
+        if (vertexArray.size != 4) return false
+        //3、理论顶点和实际顶点对应不上的一定不是完美矩形
+        lt[0] = lb[0]
+        lt[1] = rt[1]
+        rb[0] = rt[0]
+        rb[1] = lb[1]
+        val theoryArray = arrayListOf(lb,rt,lt,rb)
+        a@for (i in vertexArray.indices){
+            b@for (j in theoryArray.indices){
+                if (vertexArray[i][0] == theoryArray[j][0] && vertexArray[i][1] == theoryArray[j][1]){
+                    continue@a
+                }
+            }
+            return false
+        }
+        //冲破重重阻碍（排除一切不满足的条件）最终得到真理
+        return true
     }
 }
