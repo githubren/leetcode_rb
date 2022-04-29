@@ -6363,4 +6363,32 @@ object Main {
         //冲破重重阻碍（排除一切不满足的条件）最终得到真理
         return true
     }
+
+    /**
+     * 1051. 高度检查器
+     */
+    fun heightChecker(heights: IntArray): Int {
+        var min = Int.MAX_VALUE
+        var max = Int.MIN_VALUE
+        heights.forEach {
+            min = min.coerceAtMost(it)
+            max = max.coerceAtLeast(it)
+        }
+        val countArray = IntArray(max-min+1)
+        heights.forEach {
+            countArray[it-min] = countArray[it-min]+1
+        }
+        var start = 0
+        var result = 0
+        for (i in countArray.indices) {
+            for (j in start until start + countArray[i]) {
+                if (i+min != heights[j]){
+                    result+=1
+                }
+            }
+            start += countArray[i]
+
+        }
+        return result
+    }
 }
