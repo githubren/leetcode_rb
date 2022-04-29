@@ -5240,6 +5240,40 @@ object Main {
         return h
     }
 
+    /**
+     * 274. H 指数
+     * 1、第一次遍历原始数组确定原始数组中的最值，根据最值确定计数数组的size，节省空间；
+     * 2、第二次遍历原始数组统计原始数组中数字出现的次数；
+     * 3、确定h指数前要先明确：计数数组index代表论文被引用的次数，存放的每个值代表被引用index次的论文有几篇；
+     *   所以在每次遍历计数数组时h指数为min{index,countArray(index)},比如countArray中index为6的空间存放的数字为5表示被引用6次的论文有5篇，根据h指数的定义此时h=5。每次遍历都会得到一个h指数，根据题意每次新产生的h应和以往的h比较取较大值；
+     * 4、由于计数数组为了节省空间可能没有从0开始，所以在统计计数往计数数组填充元素的时候，还有在后面遍历计数数组取index做比较的时候，不要忘了加上原始数组的min值，避免出现数组越界的情况。
+     */
+    fun hIndex3(citations: IntArray): Int{
+        //最值
+        var min = Int.MAX_VALUE
+        var max = Int.MIN_VALUE
+        citations.forEach {
+            min = min.coerceAtMost(it)
+            max = max.coerceAtLeast(it)
+        }
+        //计数数组
+        val countArray = IntArray(max-min+1)
+        citations.forEach {
+            countArray[it-min] = countArray[it-min]+1
+        }
+        var count = 0
+        var h = Int.MIN_VALUE
+        for (i in countArray.size-1 downTo 0){
+            count += countArray[i]
+            //h=max{h,min{至少引用i+min次的总论文数，i+min}}
+            h = h.coerceAtLeast(count.coerceAtMost(i+min))
+        }
+        return h
+    }
+
+    /**
+     * 计数排序
+     */
     private fun countSort(nums: IntArray): IntArray{
         var max = nums[0]
         var min = nums[0]
