@@ -6391,4 +6391,36 @@ object Main {
         }
         return result
     }
+
+    /**
+     * 1122. 数组的相对排序
+     */
+    fun relativeSortArray(arr1: IntArray, arr2: IntArray): IntArray {
+        var min = Int.MAX_VALUE
+        var max = Int.MIN_VALUE
+        arr1.forEach {
+            min = min.coerceAtMost(it)
+            max = max.coerceAtLeast(it)
+        }
+        val countArray = IntArray(max-min+1)
+        arr1.forEach {
+            countArray[it-min]+=1
+        }
+        val result = IntArray(arr1.size)
+        var index = 0
+        arr2.forEach {
+            for (i in 0 until countArray[it-min]){
+                result[index] = it
+                index++
+            }
+            countArray[it-min] = 0
+        }
+        for (i in countArray.indices){
+            for (j in 0 until countArray[i]){
+                result[index] = i+min
+                index++
+            }
+        }
+        return result
+    }
 }
