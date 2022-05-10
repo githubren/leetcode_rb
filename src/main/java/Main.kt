@@ -636,14 +636,16 @@ object Main {
 
 //        randPoint()
 
-        println(isRectangleCover(arrayOf(intArrayOf(1,1,3,3), intArrayOf(3,1,4,2), intArrayOf(1,3,2,4), intArrayOf(2,2,4,4))))
-        println(isRectangleCover(arrayOf(intArrayOf(1,1,2,3), intArrayOf(1,3,2,4), intArrayOf(3,1,4,2), intArrayOf(3,2,4,4))))
-        println(isRectangleCover(arrayOf(intArrayOf(1,1,3,3), intArrayOf(3,1,4,2), intArrayOf(3,2,4,4), intArrayOf(1,3,2,4), intArrayOf(2,3,3,4))))
-        println(isRectangleCover(arrayOf(intArrayOf(0,0,1,1), intArrayOf(0,1,1,2), intArrayOf(0,2,1,3), intArrayOf(1,0,2,1),intArrayOf(1,0,2,1),
-            intArrayOf(1,2,2,3),
-            intArrayOf(2,0,3,1),
-            intArrayOf(2,1,3,2),
-            intArrayOf(2,2,3,3))))
+//        println(isRectangleCover(arrayOf(intArrayOf(1,1,3,3), intArrayOf(3,1,4,2), intArrayOf(1,3,2,4), intArrayOf(2,2,4,4))))
+//        println(isRectangleCover(arrayOf(intArrayOf(1,1,2,3), intArrayOf(1,3,2,4), intArrayOf(3,1,4,2), intArrayOf(3,2,4,4))))
+//        println(isRectangleCover(arrayOf(intArrayOf(1,1,3,3), intArrayOf(3,1,4,2), intArrayOf(3,2,4,4), intArrayOf(1,3,2,4), intArrayOf(2,3,3,4))))
+//        println(isRectangleCover(arrayOf(intArrayOf(0,0,1,1), intArrayOf(0,1,1,2), intArrayOf(0,2,1,3), intArrayOf(1,0,2,1),intArrayOf(1,0,2,1),
+//            intArrayOf(1,2,2,3),
+//            intArrayOf(2,0,3,1),
+//            intArrayOf(2,1,3,2),
+//            intArrayOf(2,2,3,3))))
+
+        println(maximumGap(intArrayOf(100,3,2,1)))
     }
 
 
@@ -6420,6 +6422,47 @@ object Main {
                 result[index] = i+min
                 index++
             }
+        }
+        return result
+    }
+
+    /**
+     * 164. 最大间距
+     * 3,36,49,51,3,2,222,45,21,63
+     */
+    fun maximumGap(nums: IntArray): Int {
+        if (nums.size < 2) return 0
+        var maxLength = 1
+        nums.forEach {
+            if (it >= Math.pow(10.0,maxLength.toDouble())){
+                maxLength = it.toString().length
+            }
+        }
+        val bucket = Array(11){IntArray(nums.size)}
+        val count = IntArray(11)
+        for (i in nums.indices){
+            bucket[10][i] = nums[i]
+        }
+        for (i in maxLength-1 downTo 0){
+            for (m in count.indices){
+                count[m] = 0
+            }
+            for (j in bucket[10].indices){
+                val tm = if (i + bucket[10][j].toString().length >= maxLength) bucket[10][j].toString()[i-maxLength+bucket[10][j].toString().length]-'0' else 0
+                bucket[tm][count[tm]] = bucket[10][j]
+                count[tm]+=1
+            }
+            for (a in 0 until count.size-1){
+                for (b in 0 until count[a]){
+                    bucket[10][count[10]] = bucket[a][b]
+                    count[10]+=1
+                }
+            }
+        }
+        var result = 0
+        for (i in bucket[10].indices){
+            if (i == 0) continue
+            result = result.coerceAtLeast(bucket[10][i]-bucket[10][i-1])
         }
         return result
     }
