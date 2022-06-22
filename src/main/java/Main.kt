@@ -645,7 +645,11 @@ object Main {
 //            intArrayOf(2,1,3,2),
 //            intArrayOf(2,2,3,3))))
 
-        println(maximumGap(intArrayOf(100,3,2,1)))
+//        println(maximumGap(intArrayOf(100,3,2,1)))
+
+        topKFrequent(intArrayOf(3,0,1,0),1).forEach {
+            print("$it ")
+        }
     }
 
 
@@ -5098,21 +5102,22 @@ object Main {
     /**
      * 220. 存在重复元素 III
      */
-//    fun containsNearbyAlmostDuplicate(nums: IntArray, k: Int, t: Int): Boolean {
-//        val set = HashSet<Long>(k+1)
-//        for (i in nums.indices){
-//            set.forEach {
-//                if (Math.abs((nums[i] - it).toLong()) <= t){
-//                    return true
-//                }
-//            }
-//            set.add(nums[i].toLong())
-//            if (set.size == k+1){
-//                set.remove(nums[i-k].toLong())
-//            }
-//        }
-//        return false
-//    }
+    fun containsNearbyAlmostDuplicate(nums: IntArray, k: Int, t: Int): Boolean {
+        if (k >= nums.size){
+            for (i in nums.indices){
+                for (j in i+1 until nums.size){
+                    if (Math.abs(nums[i].toLong()-nums[j].toLong()) <= t) return true
+                }
+            }
+        }else{
+            for (i in 0 until nums.size-k){
+                for (j in i+1 .. i+k){
+                    if (Math.abs(nums[i].toLong()-nums[j].toLong()) <= t) return true
+                }
+            }
+        }
+        return false
+    }
 
 
     /**
@@ -6463,6 +6468,50 @@ object Main {
         for (i in bucket[10].indices){
             if (i == 0) continue
             result = result.coerceAtLeast(bucket[10][i]-bucket[10][i-1])
+        }
+        return result
+    }
+
+    /**
+     * 347. 前 K 个高频元素
+     */
+    fun topKFrequent(nums: IntArray, k: Int): IntArray {
+        val map = HashMap<Int,Int>()
+        val result = IntArray(k)
+        var index = 0
+        for (i in nums.indices){
+            map[nums[i]] = map.getOrDefault(nums[i],0)+1
+        }
+        if (k > map.size/2){
+            var min = Int.MAX_VALUE
+            var minIndex = 0
+            for (m in 0 until map.size-k) {
+                map.keys.forEach {
+                    if (map[it]!! <= min) {
+                        min = map[it] ?: 0
+                        minIndex = it
+                    }
+                }
+                map.remove(minIndex)
+                min = Int.MAX_VALUE
+            }
+            map.keys.forEach {
+                result[index++] = it
+            }
+        }else{
+            var max = Int.MIN_VALUE
+            var maxIndex = 0
+            for (n in 0 until k){
+                map.keys.forEach {
+                    if (map[it]!! >= max){
+                        max = map[it]?:0
+                        maxIndex = it
+                    }
+                }
+                map.remove(maxIndex)
+                result[index++] = maxIndex
+                max = Int.MIN_VALUE
+            }
         }
         return result
     }
