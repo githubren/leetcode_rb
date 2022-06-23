@@ -6515,4 +6515,59 @@ object Main {
         }
         return result
     }
+
+    /**
+     * 451. 根据字符出现频率排序
+     */
+    fun frequencySort(s: String): String {
+        val map = HashMap<Char,Int>()
+        val sb = StringBuilder()
+        s.forEach {
+            map[it] = map.getOrDefault(it,0)+1
+        }
+        var maxCount = 0
+        var maxChar = '0'
+        for (i in map.keys.indices){
+            map.keys.forEach {
+                if (maxCount < map[it]!!){
+                    maxCount = map[it]!!
+                    maxChar = it
+                }
+            }
+            for (j in 0 until maxCount){
+                sb.append(maxChar)
+            }
+            maxCount = 0
+            map.remove(maxChar)
+        }
+        return sb.toString()
+    }
+
+    /**
+     * 451. 根据字符出现频率排序
+     * 桶排序
+     */
+    fun frequencySort2(s: String): String {
+        val map = HashMap<Char,Int>()
+        val sb = StringBuilder()
+        var maxCount = 0
+        s.forEach {
+            map[it] = map.getOrDefault(it,0)+1
+            maxCount = maxCount.coerceAtLeast(map[it]?:0)
+        }
+        val buckets = Array(maxCount){ArrayList<Char>()}
+        map.keys.forEach {
+            buckets[map[it]!!-1].add(it)
+        }
+        for (i in buckets.size-1 downTo 0){
+            if (buckets[i].isNotEmpty()){
+                buckets[i].forEach {
+                    for (j in 0 until i+1){
+                        sb.append(it)
+                    }
+                }
+            }
+        }
+        return sb.toString()
+    }
 }
