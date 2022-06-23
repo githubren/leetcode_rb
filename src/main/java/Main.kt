@@ -647,7 +647,11 @@ object Main {
 
 //        println(maximumGap(intArrayOf(100,3,2,1)))
 
-        topKFrequent(intArrayOf(3,0,1,0),1).forEach {
+//        topKFrequent(intArrayOf(3,0,1,0),1).forEach {
+//            print("$it ")
+//        }
+
+        topKFrequent(arrayOf("i", "love", "leetcode", "i", "love", "coding"),1).forEach {
             print("$it ")
         }
     }
@@ -6569,5 +6573,33 @@ object Main {
             }
         }
         return sb.toString()
+    }
+
+    /**
+     * 692. 前K个高频单词
+     */
+    fun topKFrequent(words: Array<String>, k: Int): List<String> {
+        val map = HashMap<String,Int>()
+        var maxCount = 0
+        words.forEach {
+            map[it] = map.getOrDefault(it,0)+1
+            maxCount = maxCount.coerceAtLeast(map[it]!!)
+        }
+        val buckets = Array(maxCount){ arrayListOf<String>()}
+        map.keys.forEach {
+            buckets[map[it]!!-1].add(it)
+        }
+        var count = 0
+        val result = arrayListOf<String>()
+        for (i in buckets.size-1 downTo 0){
+            buckets[i].sort()
+            for (j in buckets[i].indices){
+                result.add(buckets[i][j])
+                count++
+                if (count == k) break
+            }
+            if (count == k) break
+        }
+        return result
     }
 }
