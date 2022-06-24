@@ -647,13 +647,13 @@ object Main {
 
 //        println(maximumGap(intArrayOf(100,3,2,1)))
 
-//        topKFrequent(intArrayOf(3,0,1,0),1).forEach {
-//            print("$it ")
-//        }
-
-        topKFrequent(arrayOf("i", "love", "leetcode", "i", "love", "coding"),1).forEach {
+        topKFrequent2(intArrayOf(1,1,1,2,2,3),2).forEach {
             print("$it ")
         }
+
+//        topKFrequent(arrayOf("i", "love", "leetcode", "i", "love", "coding"),1).forEach {
+//            print("$it ")
+//        }
     }
 
 
@@ -5107,19 +5107,7 @@ object Main {
      * 220. 存在重复元素 III
      */
     fun containsNearbyAlmostDuplicate(nums: IntArray, k: Int, t: Int): Boolean {
-        if (k >= nums.size){
-            for (i in nums.indices){
-                for (j in i+1 until nums.size){
-                    if (Math.abs(nums[i].toLong()-nums[j].toLong()) <= t) return true
-                }
-            }
-        }else{
-            for (i in 0 until nums.size-k){
-                for (j in i+1 .. i+k){
-                    if (Math.abs(nums[i].toLong()-nums[j].toLong()) <= t) return true
-                }
-            }
-        }
+
         return false
     }
 
@@ -6516,6 +6504,33 @@ object Main {
                 result[index++] = maxIndex
                 max = Int.MIN_VALUE
             }
+        }
+        return result
+    }
+
+    /**
+     * 347. 前 K 个高频元素
+     * 桶排序
+     */
+    fun topKFrequent2(nums: IntArray, k: Int): IntArray {
+        val map = HashMap<Int,Int>()
+        val result = IntArray(k)
+        var index = 0
+        var maxCount = 0
+        for (i in nums.indices){
+            map[nums[i]] = map.getOrDefault(nums[i],0)+1
+            maxCount = maxCount.coerceAtLeast(map[nums[i]]!!)
+        }
+        val buckets = Array(maxCount){ arrayListOf<Int>() }
+        map.keys.forEach {
+            buckets[map[it]!!-1].add(it)
+        }
+        for (i in buckets.size-1 downTo 0){
+            for (j in buckets[i].indices){
+                result[index++] = buckets[i][j]
+                if (index == k) break
+            }
+            if (index == k) break
         }
         return result
     }
