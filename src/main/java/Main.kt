@@ -2,10 +2,13 @@ import Main.backTraceUniquePathsWithObstacles
 import com.sun.org.apache.xpath.internal.operations.Bool
 import java.lang.StringBuilder
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.LinkedBlockingQueue
+import java.util.function.IntConsumer
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
+import kotlin.concurrent.thread
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.pow
@@ -647,13 +650,21 @@ object Main {
 
 //        println(maximumGap(intArrayOf(100,3,2,1)))
 
-        topKFrequent2(intArrayOf(1,1,1,2,2,3),2).forEach {
-            print("$it ")
-        }
+//        topKFrequent2(intArrayOf(1,1,1,2,2,3),2).forEach {
+//            print("$it ")
+//        }
 
 //        topKFrequent(arrayOf("i", "love", "leetcode", "i", "love", "coding"),1).forEach {
 //            print("$it ")
 //        }
+
+//        testZeroEvenOdd()
+
+//        testFizzBuzz()
+
+//        testCombinationIterator()
+
+        println(findKthLargest(intArrayOf(3,2,3,1,2,4,5,5,6),4))
     }
 
 
@@ -6616,5 +6627,62 @@ object Main {
             if (count == k) break
         }
         return result
+    }
+
+    fun testZeroEvenOdd(){
+        val zeroEvenOdd = ZeroEvenOdd(3)
+        thread { zeroEvenOdd.zero() }
+        thread { zeroEvenOdd.even() }
+        thread { zeroEvenOdd.odd() }
+    }
+
+    fun testFizzBuzz(){
+        val fizzBuzz = FizzBuzz(15)
+        thread { fizzBuzz.fizz {  } }
+        thread { fizzBuzz.buzz {  } }
+        thread { fizzBuzz.fizzbuzz {  } }
+        thread { fizzBuzz.number {  } }
+    }
+
+    fun testCombinationIterator(){
+        val iterator = CombinationIterator("abc",2)
+        println(iterator.next())
+        println(iterator.hasNext())
+        println(iterator.next())
+        println(iterator.hasNext())
+        println(iterator.next())
+        println(iterator.hasNext())
+    }
+
+
+    /**
+     * 215. 数组中的第K个最大元素
+     */
+    fun findKthLargest(nums: IntArray, k: Int): Int {
+        var min = Int.MAX_VALUE
+        var max = Int.MIN_VALUE
+        nums.forEach {
+            min = min.coerceAtMost(it)
+            max = max.coerceAtLeast(it)
+        }
+        val countArray = IntArray(max-min+1)
+        nums.forEach {
+            countArray[it-min] += 1
+        }
+
+        if (nums.size/2 > k){//k在nums中靠后 从后面开始找
+            var index = k
+            for (i in countArray.size-1 downTo 0){
+                index -= countArray[i]
+                if (index <= 0) return i+min
+            }
+        }else{//k在nums中靠前  从前面找
+            var index = nums.size-k
+            for (i in countArray.indices){
+                index -= countArray[i]
+                if (index < 0) return i+min
+            }
+        }
+        return 0
     }
 }
