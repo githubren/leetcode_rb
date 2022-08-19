@@ -14,6 +14,7 @@ import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.random.Random
+import kotlin.collections.indices as indices
 
 object Main {
 
@@ -6684,5 +6685,21 @@ object Main {
             }
         }
         return 0
+    }
+
+    /**
+     * 324. 摆动排序 II
+     */
+    fun wiggleSort(nums: IntArray): Unit {
+        val tmArr = IntArray(nums.size)
+        System.arraycopy(nums,0,tmArr,0,nums.size)
+        Arrays.sort(tmArr)
+        var j = nums.size-1
+        for (i in 1 until nums.size step 2){
+            nums[i] = tmArr[j--]
+        }
+        for (i in nums.indices step 2){
+            nums[i] = tmArr[j--]
+        }
     }
 }
