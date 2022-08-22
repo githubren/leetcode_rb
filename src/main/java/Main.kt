@@ -665,7 +665,13 @@ object Main {
 
 //        testCombinationIterator()
 
-        println(findKthLargest(intArrayOf(3,2,3,1,2,4,5,5,6),4))
+//        println(findKthLargest(intArrayOf(3,2,3,1,2,4,5,5,6),4))
+        kClosest(arrayOf(intArrayOf(3,3), intArrayOf(5,-1), intArrayOf(-2,4)),2).forEach {
+            it.forEach {
+                print("$it ")
+            }
+            println()
+        }
     }
 
 
@@ -6701,5 +6707,39 @@ object Main {
         for (i in nums.indices step 2){
             nums[i] = tmArr[j--]
         }
+    }
+
+    /**
+     * 973. 最接近原点的 K 个点
+     */
+    fun kClosest(points: Array<IntArray>, k: Int): Array<IntArray> {
+        val distances = IntArray(points.size)
+        for (i in points.indices){
+            distances[i] = points[i][0]*points[i][0]+points[i][1]*points[i][1]
+        }
+        distances.forEach {
+            print("$it ")
+        }
+        println("上面是distances")
+        val indexSortArr = IntArray(points.size)
+        for (i in points.indices){
+            var minIndex = 0
+            for (j in points.indices){
+                if (distances[j] <= distances[minIndex]){
+                    minIndex = j
+                }
+            }
+            distances[minIndex] = Int.MAX_VALUE
+            indexSortArr[i] = minIndex
+        }
+        indexSortArr.forEach {
+            print("$it ")
+        }
+        println("上面是indexSortArr")
+        val result = Array(k){IntArray(2)}
+        for (i in 0 until k){
+            result[i] = points[indexSortArr[i]]
+        }
+        return result
     }
 }
