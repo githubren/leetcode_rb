@@ -1,18 +1,11 @@
-import Main.backTraceUniquePathsWithObstacles
-import com.sun.org.apache.xpath.internal.operations.Bool
 import java.lang.StringBuilder
 import java.util.*
-import java.util.concurrent.CountDownLatch
 import java.util.concurrent.LinkedBlockingQueue
-import java.util.function.IntConsumer
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlin.concurrent.thread
 import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.pow
-import kotlin.math.sqrt
 import kotlin.random.Random
 import kotlin.collections.indices as indices
 
@@ -666,12 +659,16 @@ object Main {
 //        testCombinationIterator()
 
 //        println(findKthLargest(intArrayOf(3,2,3,1,2,4,5,5,6),4))
-        kClosest(arrayOf(intArrayOf(3,3), intArrayOf(5,-1), intArrayOf(-2,4)),2).forEach {
-            it.forEach {
-                print("$it ")
-            }
-            println()
-        }
+//        kClosest(arrayOf(intArrayOf(3,3), intArrayOf(5,-1), intArrayOf(-2,4)),2).forEach {
+//            it.forEach {
+//                print("$it ")
+//            }
+//            println()
+//        }
+
+//        print(kthLargestNumber(arrayOf(),1))
+
+        print(largestNumber(intArrayOf(10,2,9,39,17)))
     }
 
 
@@ -5550,22 +5547,39 @@ object Main {
     /**
      * 179. 最大数
      * 3,30,34,5,9
+     * 10,2,9,39,17
      */
     fun largestNumber(nums: IntArray): String {
+        if (nums.isEmpty()) return ""
+        if (nums.size == 1) return nums[0].toString()
         val sb = StringBuilder()
-//        val sortList = arrayListOf<Int>()
-//        for (i in nums.indices){
-//            if (i == 0){
-//                sortList.add(nums[i])
-//                continue
-//            }
-//            when{
-//                nums[i].toString()[0] < sortList[i-1].toString()[0] -> sortList.add(nums[i])
-//                nums[i].toString()[0] > sortList[i-1].toString()[0] -> {
-//                    for (j in )
-//                }
-//            }
-//        }
+        val idxArr = IntArray(2)//保存组合的索引，0在前，1在后
+        val sortIdxList = arrayListOf<Int>()
+        var isSorted = false
+        sortIdxList.add(0)
+        a@ for (i in 1 until nums.size){
+            idxArr[0] = nums[i]
+            b@ for (j in sortIdxList.indices){
+                idxArr[1] = nums[sortIdxList[j]]
+                val tm1 = "${idxArr[0]}${idxArr[1]}"
+                val tm2 = "${idxArr[1]}${idxArr[0]}"
+                c@ for (k in tm1.indices){
+                    if (tm1[k].toInt() == tm2[k].toInt()) continue
+                    if (tm1[k].toInt() > tm2 [k].toInt()){
+                        sortIdxList.add(j,i)
+                        isSorted = true
+                        break@b
+                    }
+                    break@c
+                }
+            }
+            if (!isSorted) sortIdxList.add(i)
+            isSorted = false
+        }
+        if (nums[sortIdxList[0]] == 0) return "0"
+        sortIdxList.forEach {
+            sb.append(nums[it])
+        }
         return sb.toString()
     }
 
@@ -6741,5 +6755,57 @@ object Main {
             result[i] = points[indexSortArr[i]]
         }
         return result
+    }
+
+    /**
+     * 1985. 找出数组中的第 K 大整数
+     * "2","21","12","1"  3
+     */
+    fun kthLargestNumber(nums: Array<String>, k: Int): String {
+        var maxLen = 0
+        nums.forEach {
+            maxLen = maxLen.coerceAtLeast(it.length)
+        }
+        val sameLenArr = Array(maxLen){ Array(10000) { "" } }//按字符串长度分组
+        val indexArr = IntArray(maxLen)
+        nums.forEach {
+            sameLenArr[it.length-1][indexArr[it.length-1]] = it
+            indexArr[it.length-1]+=1
+        }
+
+        sameLenArr.forEach {
+            if (it[0].isEmpty() || indexArr[it[0].length-1] < 2) return@forEach
+            for (i in it[0].length-1 downTo 0){//以字符串长度为外层循环周期
+                //冒泡排序
+                for (j in 0 .. indexArr[it[0].length-1]-2){//循环当前字符串组
+                    for (m in 0 .. indexArr[it[0].length-1]-2-j){
+                        if (it[m][i].toInt() < it[m+1][i].toInt()){
+                            val t = it[m+1]
+                            it[m+1] = it[m]
+                            it[m] = t
+                        }
+                    }
+                }
+            }
+        }
+        sameLenArr.forEach {
+            if (it[0].isEmpty()) return@forEach
+            it.forEach { s->
+                if (s.isNotEmpty()){
+                    print("$s,")
+                }
+            }
+            println()
+        }
+        val sortedArray = Array(nums.size){""}
+        var sortedIndex = 0
+        for (i in sameLenArr.size-1 downTo 0){
+            if (sameLenArr[i][0].isEmpty()) continue
+            for (j in sameLenArr[i].indices){
+                if (sameLenArr[i][j].isEmpty()) break
+                sortedArray[sortedIndex++] = sameLenArr[i][j]
+            }
+        }
+        return sortedArray[k-1]
     }
 }
