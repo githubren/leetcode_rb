@@ -6,6 +6,7 @@ import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlin.concurrent.thread
 import kotlin.math.abs
+import kotlin.math.min
 import kotlin.random.Random
 import kotlin.collections.indices as indices
 
@@ -668,7 +669,13 @@ object Main {
 
 //        print(kthLargestNumber(arrayOf(),1))
 
-        print(largestNumber(intArrayOf(10,2,9,39,17)))
+//        print(largestNumber(intArrayOf(10,2,9,39,17)))
+
+        print(maximalSquare2(arrayOf(charArrayOf('1','0','1','0','0'),charArrayOf('1','0','1','1','1'),
+                                    charArrayOf('1','1','1','1','1'),charArrayOf('1','0','0','1','0'))))
+
+//        print(maximalSquare2(arrayOf(charArrayOf('0','1'),charArrayOf('1','0'))))
+
     }
 
 
@@ -5039,28 +5046,28 @@ object Main {
         bfsNumIslands(grid, isVisited, i+1, j)
     }
 
-//    /**
-//     * 204. 计数质数
-//     */
-//    fun countPrimes(n: Int): Int {
-//        if (n == 0 || n == 1) return 0
-//        var count = 0
-//        for (i in 2 until n){
-//            count += if (isPrimes(i)) 1 else 0
-//        }
-//        return count
-//    }
-//
-//    private fun isPrimes(x: Int): Boolean{
-//        var i = 2
-//        while (i*i<=x){
-//            if (x%i == 0){
-//                return false
-//            }
-//            i++
-//        }
-//        return true
-//    }
+    /**
+     * 204. 计数质数
+     */
+    fun countPrimes(n: Int): Int {
+        if (n == 0 || n == 1) return 0
+        var count = 0
+        for (i in 2 until n){
+            count += if (isPrimes(i)) 1 else 0
+        }
+        return count
+    }
+
+    private fun isPrimes(x: Int): Boolean{
+        var i = 2
+        while (i*i<=x){
+            if (x%i == 0){
+                return false
+            }
+            i++
+        }
+        return true
+    }
 
     /**
      * 216. 组合总和 III
@@ -5129,17 +5136,52 @@ object Main {
 
     /**
      * 221. 最大正方形
+     * 暴力求解
      */
-//    fun maximalSquare(matrix: Array<CharArray>): Int {
-//        val dp = Array(matrix.size){IntArray(matrix[0].size)}
-//        dp[0][0] = if (matrix[0][0] == '1') 1 else 0
-//        for (i in matrix.indices){
-//            for (j in matrix[i].indices){
-//                if (i == 0 && j == 0)continue
-//
-//            }
-//        }
-//    }
+    fun maximalSquare(matrix: Array<CharArray>): Int {
+        var maxSquare = 0
+        for (i in matrix.indices){
+            for (j in matrix[i].indices){
+                if (matrix[i][j] == '0') continue
+                var side = 1
+                var tmSquare = 1
+                w@ while (true){
+                    for (a in i .. i+side){
+                        if (a > matrix.size-1) break@w
+                        for (b in j .. j+side){
+                            if (b > matrix[a].size-1 || matrix[a][b] == '0') break@w
+                        }
+                    }
+                    side+=1
+                    tmSquare = side*side
+                }
+                maxSquare = maxSquare.coerceAtLeast(tmSquare)
+            }
+        }
+        return maxSquare
+    }
+
+    /**
+     * 221. 最大正方形
+     * 动态分布
+     */
+    fun maximalSquare2(matrix: Array<CharArray>): Int {
+        val dp = Array(matrix.size){IntArray(matrix[0].size)}
+        dp[0][0] = if (matrix[0][0] == '1') 1 else 0
+        var maxSide = dp[0][0]
+        for (i in matrix.indices){
+            for (j in matrix[i].indices){
+                if (i == 0 && j == 0) continue
+                if (i == 0 || j == 0){
+                    dp[i][j] = matrix[i][j] - '0'
+                }else{
+                    dp[i][j] = if (matrix[i][j] == '0') 0 else dp[i-1][j].coerceAtMost(dp[i][j-1]).coerceAtMost(dp[i-1][j-1])+1
+                }
+                maxSide = maxSide.coerceAtLeast(dp[i][j])
+            }
+        }
+        return maxSide*maxSide
+    }
 
     /**
      * 228. 汇总区间
